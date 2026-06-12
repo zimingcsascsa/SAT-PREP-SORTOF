@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAT Practice Pro — Diagnose. Practice. Excel.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#0b1426;--navy-light:#132240;--cream:#f6f1e8;--gold:#c49a2a;--gold-light:#dbb44a;--blue:#2563a8;--blue-light:#3a7dc9;--green:#1a8a5c;--green-bg:#e8f5ef;--red:#c93c3c;--red-bg:#fdeaea;--amber:#d4a017;--amber-bg:#fdf6e3;--text-dark:#1a1a1a;--text-light:#f0ece4;--text-muted:#6b6560;--border:#e2ddd4;--shadow:0 2px 20px rgba(0,0,0,0.08);--shadow-lg:0 8px 40px rgba(0,0,0,0.12);--radius:10px;--font-display:'Playfair Display',Georgia,serif;--font-body:'Source Serif 4',Georgia,serif;--font-mono:'JetBrains Mono',monospace}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font-body);color:var(--text-dark);background:var(--cream);line-height:1.6;min-height:100vh;overflow-x:hidden}
+body.test-active{background:#f8f7f5}
+.main-nav{position:sticky;top:0;z-index:100;background:var(--navy);padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--gold)}
+.main-nav .logo{font-family:var(--font-display);font-weight:900;font-size:1.25rem;color:var(--text-light);cursor:pointer;letter-spacing:-0.02em}
+.main-nav .logo span{color:var(--gold)}
+.main-nav .nav-links{display:flex;gap:1.5rem;align-items:center}
+.main-nav .nav-links a{color:var(--text-light);text-decoration:none;font-size:0.85rem;font-weight:500;opacity:0.75;transition:opacity 0.2s;cursor:pointer;font-family:var(--font-body)}
+.main-nav .nav-links a:hover{opacity:1}
+.main-nav .nav-links a.active{opacity:1;color:var(--gold)}
+.hero{background:var(--navy);padding:5rem 2rem 4rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 20%,rgba(196,154,42,0.08) 0%,transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(37,99,168,0.06) 0%,transparent 50%);pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.hero h1{font-family:var(--font-display);font-weight:900;font-size:clamp(2.5rem,5vw,4rem);color:var(--text-light);line-height:1.1;margin-bottom:1rem;letter-spacing:-0.03em}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p{color:var(--text-light);opacity:0.7;font-size:1.15rem;max-width:580px;font-weight:300;line-height:1.7}
+.hero-accent{width:60px;height:3px;background:var(--gold);margin:1.5rem 0}
+.home-content{max-width:1100px;margin:0 auto;padding:3rem 2rem 4rem}
+.section-subtitle{color:var(--text-muted);margin-bottom:2rem;font-size:0.95rem}
+.test-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.5rem;margin-bottom:3.5rem}
+.test-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:transform 0.25s,box-shadow 0.25s;opacity:0;animation:fadeUp 0.6s ease forwards}
+.test-card:nth-child(2){animation-delay:0.12s}
+.test-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.test-card-header{padding:1.5rem 1.5rem 1rem;border-bottom:1px solid var(--border)}
+.test-card-header .test-label{font-family:var(--font-mono);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--gold);font-weight:600;margin-bottom:0.3rem}
+.test-card-header h3{font-family:var(--font-display);font-size:1.3rem;font-weight:700}
+.test-card-header p{color:var(--text-muted);font-size:0.85rem;margin-top:0.3rem}
+.test-card-body{padding:1.25rem 1.5rem 1.5rem;display:flex;flex-direction:column;gap:0.6rem}
+.module-divider{display:flex;align-items:center;gap:0.75rem;margin:0.4rem 0 0.2rem}
+.module-divider span{font-family:var(--font-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);font-weight:600;white-space:nowrap}
+.module-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.module-divider.advanced span{color:var(--gold)}
+.section-btn{display:flex;align-items:center;justify-content:space-between;padding:0.75rem 1.1rem;border:2px solid var(--border);border-radius:8px;cursor:pointer;transition:all 0.2s;background:#fff;font-family:var(--font-body)}
+.section-btn:hover{border-color:var(--blue);background:rgba(37,99,168,0.04)}
+.section-btn .sb-info{display:flex;flex-direction:column}
+.section-btn .sb-name{font-weight:600;font-size:0.92rem}
+.section-btn .sb-meta{font-size:0.75rem;color:var(--text-muted);font-family:var(--font-mono)}
+.section-btn .sb-arrow{font-size:1.1rem;color:var(--blue);transition:transform 0.2s}
+.section-btn:hover .sb-arrow{transform:translateX(3px)}
+.section-btn.completed{border-color:var(--green);background:var(--green-bg)}
+.section-btn.completed .sb-name{color:var(--green)}
+.section-btn.hard{border-color:rgba(196,154,42,0.3);background:rgba(196,154,42,0.03)}
+.section-btn.hard:hover{border-color:var(--gold);background:rgba(196,154,42,0.06)}
+.section-btn.hard.completed{border-color:var(--green);background:var(--green-bg)}
+.sb-badge{font-size:0.62rem;padding:0.12rem 0.45rem;border-radius:99px;font-family:var(--font-mono);font-weight:600;background:var(--green);color:#fff;margin-left:0.5rem}
+.perf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem}
+.perf-card{background:#fff;border-radius:var(--radius);padding:1.25rem;box-shadow:var(--shadow);text-align:center;opacity:0;animation:fadeUp 0.5s ease forwards}
+.perf-card:nth-child(2){animation-delay:0.1s}.perf-card:nth-child(3){animation-delay:0.2s}.perf-card:nth-child(4){animation-delay:0.3s}
+.perf-card .perf-val{font-family:var(--font-mono);font-size:1.8rem;font-weight:700;color:var(--navy)}
+.perf-card .perf-label{font-size:0.78rem;color:var(--text-muted);margin-top:0.2rem}
+.score-breakdown{background:#fff;border-radius:var(--radius);padding:1.25rem 1.5rem;box-shadow:var(--shadow);margin-bottom:2rem;opacity:0;animation:fadeUp 0.5s ease forwards;animation-delay:0.35s}
+.score-breakdown h4{font-family:var(--font-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);font-weight:600;margin-bottom:0.8rem}
+.score-row{display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid var(--border)}
+.score-row:last-child{border-bottom:none;padding-bottom:0}
+.score-row .sr-label{font-weight:500;font-size:0.9rem}
+.score-row .sr-val{font-family:var(--font-mono);font-weight:600;font-size:1rem}
+.score-row .sr-track{font-family:var(--font-mono);font-size:0.68rem;text-transform:uppercase;letter-spacing:0.08em;padding:0.15rem 0.5rem;border-radius:4px;margin-left:0.5rem;font-weight:600}
+.track-hard{background:rgba(196,154,42,0.12);color:var(--gold)}
+.track-standard{background:rgba(37,99,168,0.1);color:var(--blue)}
+.track-pending{background:var(--border);color:var(--text-muted)}
+.score-row.total-row{border-top:2px solid var(--navy);border-bottom:none;padding-top:0.8rem;margin-top:0.2rem}
+.score-row.total-row .sr-label{font-weight:700;font-size:1rem}
+.score-row.total-row .sr-val{font-size:1.2rem;color:var(--gold)}
+.adaptive-note{background:var(--amber-bg);border:1px solid rgba(212,160,23,0.2);border-radius:6px;padding:0.75rem 1rem;margin-top:1rem;font-size:0.82rem;line-height:1.6;color:#5a4a10}
+.adaptive-note strong{color:#3d3210}
+.test-header{background:#fff;border-bottom:1px solid var(--border);padding:0.75rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:56px;z-index:50}
+.test-header-left{display:flex;align-items:center;gap:1rem}
+.test-header-left .th-section{font-family:var(--font-mono);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--gold);font-weight:600}
+.test-header-left .th-title{font-family:var(--font-display);font-weight:600;font-size:1rem}
+.test-header-right{display:flex;align-items:center;gap:1.5rem}
+.timer{font-family:var(--font-mono);font-size:1.05rem;font-weight:600;color:var(--text-dark);display:flex;align-items:center;gap:0.4rem}
+.timer.warning{color:var(--amber)}.timer.danger{color:var(--red);animation:pulse 1s infinite}
+.timer svg{width:18px;height:18px}
+.exit-btn{font-size:0.8rem;color:var(--text-muted);cursor:pointer;border:none;background:none;font-family:var(--font-body);text-decoration:underline;transition:color 0.2s}
+.exit-btn:hover{color:var(--red)}
+.progress-bar-track{height:3px;background:var(--border);position:sticky;top:115px;z-index:49}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--gold));transition:width 0.4s ease;border-radius:0 2px 2px 0}
+.test-layout{display:flex;max-width:1200px;margin:0 auto;min-height:calc(100vh - 120px)}
+.test-main{flex:1;padding:2rem 2.5rem;max-width:800px}
+.test-sidebar{width:220px;padding:2rem 1.5rem;border-left:1px solid var(--border);position:sticky;top:120px;height:fit-content;max-height:calc(100vh - 140px);overflow-y:auto}
+.passage-panel{background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem;max-height:280px;overflow-y:auto}
+.passage-panel .passage-title{font-family:var(--font-display);font-weight:600;font-size:1rem;margin-bottom:0.75rem;color:var(--navy)}
+.passage-panel .passage-text{font-size:0.92rem;line-height:1.8;color:#333}
+.passage-panel .passage-text p{margin-bottom:0.8rem}.passage-panel .passage-text p:last-child{margin-bottom:0}
+.q-meta{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem}
+.q-num{font-family:var(--font-mono);font-size:0.85rem;font-weight:600;color:var(--blue);background:rgba(37,99,168,0.08);padding:0.2rem 0.6rem;border-radius:4px}
+.q-cat{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);font-weight:500}
+.q-text{font-size:1.05rem;line-height:1.7;margin-bottom:1.5rem;font-weight:400}
+.q-text .math-expr{font-family:var(--font-mono);background:rgba(37,99,168,0.06);padding:0.1rem 0.4rem;border-radius:3px;font-size:0.95rem}
+.choices{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.5rem}
+.choice{display:flex;align-items:flex-start;gap:0.85rem;padding:0.85rem 1rem;border:2px solid var(--border);border-radius:8px;cursor:pointer;transition:border-color 0.15s,background 0.15s;user-select:none}
+.choice:hover{border-color:var(--blue);background:rgba(37,99,168,0.03)}
+.choice.selected{border-color:var(--blue);background:rgba(37,99,168,0.06)}
+.choice .choice-letter{font-family:var(--font-mono);font-weight:600;font-size:0.85rem;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:2px solid var(--border);flex-shrink:0;transition:border-color 0.15s,background 0.15s}
+.choice.selected .choice-letter{border-color:var(--blue);background:var(--blue);color:#fff}
+.choice .choice-text{font-size:0.95rem;line-height:1.5;padding-top:0.1rem}
+.q-actions{display:flex;align-items:center;gap:1rem;margin-bottom:2rem}
+.mark-btn{font-size:0.82rem;color:var(--amber);cursor:pointer;border:1px solid var(--amber);background:var(--amber-bg);padding:0.4rem 0.9rem;border-radius:6px;font-family:var(--font-body);transition:all 0.2s}
+.mark-btn:hover{background:var(--amber);color:#fff}.mark-btn.marked{background:var(--amber);color:#fff}
+.q-nav{display:flex;justify-content:space-between;align-items:center}
+.nav-btn{font-family:var(--font-body);font-size:0.9rem;padding:0.65rem 1.5rem;border-radius:8px;cursor:pointer;transition:all 0.2s;border:none;font-weight:500}
+.nav-btn.prev{background:#fff;border:2px solid var(--border);color:var(--text-dark)}.nav-btn.prev:hover{border-color:var(--text-muted)}
+.nav-btn.next{background:var(--blue);color:#fff}.nav-btn.next:hover{background:var(--blue-light)}
+.nav-btn.submit{background:var(--gold);color:#fff;font-weight:600}.nav-btn.submit:hover{background:var(--gold-light)}
+.nav-btn:disabled{opacity:0.4;cursor:not-allowed}
+.qp-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0.5rem;margin-bottom:1.5rem}
+.qp-label{font-family:var(--font-mono);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:0.5rem;font-weight:600}
+.qp-btn{width:36px;height:36px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.15s;background:#fff;color:var(--text-dark)}
+.qp-btn:hover{border-color:var(--blue)}.qp-btn.current{border-color:var(--blue);background:var(--blue);color:#fff}
+.qp-btn.answered{border-color:var(--blue);background:rgba(37,99,168,0.1);color:var(--blue)}
+.qp-btn.marked{border-color:var(--amber);position:relative}
+.qp-btn.marked::after{content:'';position:absolute;top:2px;right:2px;width:6px;height:6px;background:var(--amber);border-radius:50%}
+.sidebar-section{margin-bottom:1.5rem}
+.sidebar-legend{display:flex;flex-direction:column;gap:0.35rem}
+.legend-item{display:flex;align-items:center;gap:0.5rem;font-size:0.78rem;color:var(--text-muted)}
+.legend-dot{width:14px;height:14px;border-radius:3px;border:2px solid var(--border)}
+.legend-dot.answered{border-color:var(--blue);background:rgba(37,99,168,0.1)}
+.legend-dot.current{border-color:var(--blue);background:var(--blue)}
+.legend-dot.marked{border-color:var(--amber);position:relative}
+.legend-dot.marked::after{content:'';position:absolute;top:1px;right:1px;width:4px;height:4px;background:var(--amber);border-radius:50%}
+.results-hero{background:var(--navy);padding:3rem 2rem;text-align:center}
+.results-hero .rh-score{font-family:var(--font-mono);font-size:4rem;font-weight:700;color:var(--gold);line-height:1}
+.results-hero .rh-label{color:var(--text-light);opacity:0.7;font-size:0.9rem;margin-top:0.3rem}
+.results-hero .rh-section{font-family:var(--font-display);font-size:1.3rem;color:var(--text-light);margin-top:0.5rem;font-weight:600}
+.results-hero .rh-stats{display:flex;justify-content:center;gap:3rem;margin-top:1.5rem;flex-wrap:wrap}
+.results-hero .rh-stat .rs-val{font-family:var(--font-mono);font-size:1.5rem;font-weight:700;color:var(--text-light)}
+.results-hero .rh-stat .rs-label{font-size:0.75rem;color:var(--text-light);opacity:0.6;margin-top:0.1rem}
+.results-hero .rh-track{margin-top:1rem;display:inline-block}
+.results-body{max-width:900px;margin:0 auto;padding:2.5rem 2rem 4rem}
+.results-section{margin-bottom:2.5rem}
+.results-section h3{font-family:var(--font-display);font-weight:700;font-size:1.2rem;margin-bottom:1rem}
+.cat-bar{margin-bottom:0.8rem}
+.cat-bar-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem}
+.cat-bar-name{font-weight:500;font-size:0.9rem}
+.cat-bar-score{font-family:var(--font-mono);font-size:0.85rem;font-weight:600}
+.cat-bar-track{height:10px;background:var(--border);border-radius:5px;overflow:hidden}
+.cat-bar-fill{height:100%;border-radius:5px}
+.cat-bar-fill.strong{background:var(--green)}.cat-bar-fill.developing{background:var(--amber)}.cat-bar-fill.weak{background:var(--red)}
+.weak-card{background:#fff;border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;box-shadow:var(--shadow);border-left:4px solid var(--red)}
+.weak-card.developing-card{border-left-color:var(--amber)}
+.weak-card h4{font-family:var(--font-display);font-size:1.05rem;margin-bottom:0.3rem}
+.weak-card .wc-score{font-family:var(--font-mono);font-size:0.8rem;font-weight:600;margin-bottom:0.5rem;color:var(--red)}
+.weak-card.developing-card .wc-score{color:var(--amber)}
+.weak-card p{font-size:0.9rem;color:var(--text-muted);line-height:1.6}
+.weak-card .wc-tip{margin-top:0.6rem;padding:0.75rem;background:var(--cream);border-radius:6px;font-size:0.85rem;line-height:1.6}
+.weak-card .wc-tip strong{color:var(--navy)}
+.review-q{background:#fff;border-radius:var(--radius);margin-bottom:0.6rem;box-shadow:0 1px 4px rgba(0,0,0,0.05);overflow:hidden}
+.review-q-header{padding:0.85rem 1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background 0.2s}
+.review-q-header:hover{background:rgba(0,0,0,0.02)}
+.review-q-header .rq-left{display:flex;align-items:center;gap:0.75rem;min-width:0;flex:1}
+.review-q-header .rq-num{font-family:var(--font-mono);font-size:0.8rem;font-weight:600;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;flex-shrink:0}
+.review-q-header .rq-num.correct-rq{background:var(--green-bg);color:var(--green)}
+.review-q-header .rq-num.incorrect-rq{background:var(--red-bg);color:var(--red)}
+.review-q-header .rq-text{font-size:0.85rem;color:var(--text-dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.review-q-header .rq-cat{font-size:0.7rem;color:var(--text-muted);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.05em;flex-shrink:0;margin:0 0.5rem}
+.review-q-header .rq-chevron{color:var(--text-muted);transition:transform 0.2s;font-size:0.8rem;flex-shrink:0}
+.review-q.open .rq-chevron{transform:rotate(180deg)}
+.review-q-body{display:none;padding:0 1.2rem 1.2rem;border-top:1px solid var(--border)}
+.review-q.open .review-q-body{display:block}
+.review-q-body .rq-choices{margin-top:0.8rem}
+.review-q-body .rq-choice{padding:0.4rem 0;font-size:0.88rem;display:flex;gap:0.5rem}
+.review-q-body .rq-choice.was-correct{color:var(--green);font-weight:600}
+.review-q-body .rq-choice.was-incorrect{color:var(--red);text-decoration:line-through;opacity:0.7}
+.review-q-body .rq-choice.correct-answer{color:var(--green);font-weight:600}
+.review-q-body .rq-explanation{margin-top:0.8rem;padding:0.75rem;background:var(--cream);border-radius:6px;font-size:0.85rem;line-height:1.6}
+.results-actions{display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem}
+.results-actions .ra-btn{padding:0.7rem 1.5rem;border-radius:8px;font-family:var(--font-body);font-size:0.9rem;font-weight:500;cursor:pointer;transition:all 0.2s;border:none}
+.ra-btn.primary{background:var(--blue);color:#fff}.ra-btn.primary:hover{background:var(--blue-light)}
+.ra-btn.secondary{background:#fff;border:2px solid var(--border);color:var(--text-dark)}.ra-btn.secondary:hover{border-color:var(--text-muted)}
+.ra-btn.gold{background:var(--gold);color:#fff}.ra-btn.gold:hover{background:var(--gold-light)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;animation:fadeIn 0.2s}
+.modal{background:#fff;border-radius:var(--radius);padding:2rem;max-width:440px;width:100%;box-shadow:var(--shadow-lg);animation:scaleIn 0.25s}
+.modal h3{font-family:var(--font-display);font-size:1.2rem;margin-bottom:0.5rem}
+.modal p{color:var(--text-muted);font-size:0.9rem;margin-bottom:1.25rem;line-height:1.6}
+.modal-btns{display:flex;gap:0.75rem;justify-content:flex-end}
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--text-muted)}
+.empty-state h3{font-family:var(--font-display);font-size:1.3rem;color:var(--text-dark);margin-bottom:0.5rem}
+.empty-state p{max-width:400px;margin:0 auto 1.5rem;font-size:0.9rem}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+@media(max-width:768px){
+.main-nav{padding:0 1rem;height:48px}.main-nav .logo{font-size:1.05rem}
+.main-nav .nav-links{gap:1rem}.main-nav .nav-links a{font-size:0.78rem}
+.hero{padding:3rem 1.5rem 2.5rem}.home-content{padding:2rem 1.5rem}
+.test-grid{grid-template-columns:1fr}.test-sidebar{display:none}
+.test-main{padding:1.5rem 1rem}.test-header{padding:0.6rem 1rem}
+.results-hero .rh-score{font-size:3rem}.results-hero .rh-stats{gap:1.5rem}
+.results-body{padding:2rem 1rem}.perf-grid{grid-template-columns:repeat(2,1fr)}
+.results-actions{flex-direction:column}.results-actions .ra-btn{text-align:center}
+.section-btn .sb-name{font-size:0.85rem}
+.score-row{flex-wrap:wrap;gap:0.3rem}
+}
+</style>
+</head>
+<body>
+<nav class="main-nav"><div class="logo" id="logoBtn">SAT Practice <span>Pro</span></div><div class="nav-links" id="navLinks"></div></nav>
+<div id="app"></div>
+<script>
+const PASSAGES={
+t1_pA:{title:"The Hidden Life of Urban Trees",text:`<p>In the concrete expanses of modern cities, trees serve as far more than decorative elements. Recent research by forest ecologist Dr. Suzanne Simard has revealed that urban trees form complex underground networks through their root systems and symbiotic fungi. These networks, sometimes called the "wood wide web," allow trees to share nutrients, water, and even chemical warning signals about pest attacks.</p><p>In cities like Melbourne, Australia, officials have begun registering individual trees and monitoring their health using sensors attached to their trunks. The data collected shows that trees with access to larger underground networks exhibit 23% greater resilience to drought conditions. This finding challenges the long-held assumption that urban trees, isolated by pavement and infrastructure, exist as solitary organisms.</p><p>The implications extend beyond ecology. Urban planners in Copenhagen have redesigned entire neighborhoods to preserve underground fungal networks, resulting in measurably improved air quality and reduced urban heat island effects. As cities worldwide grapple with climate change, understanding the hidden social lives of trees may prove essential to building more sustainable urban environments.</p>`},
+t1_pB:{title:"The Weight of the Ballot",text:`<p>The concept of universal suffrage—the right of all adult citizens to vote—appears self-evident today, yet its expansion throughout history has been anything but inevitable. In ancient Athens, often celebrated as the birthplace of democracy, only free adult male citizens could participate in political decisions, excluding women, enslaved people, and foreign residents—roughly 70% of the population.</p><p>The gradual widening of voting rights accelerated during the 19th and 20th centuries, driven by sustained social movements. In Britain, the Chartist movement of the 1830s and 1840s demanded universal male suffrage, while the suffragette movement of the early 1900s fought for women's right to vote. New Zealand became the first self-governing nation to grant women the vote in 1893, though it would take until 1920 for American women and 1944 for French women to gain the same right.</p><p>What is often overlooked in this narrative is the role that economic arguments played. Critics of expanded suffrage frequently argued that those without property lacked the judgment to make informed political decisions—a claim that functioned primarily to preserve existing power structures. The eventual triumph of universal suffrage suggests that democratic systems are most resilient when they harness the collective wisdom of their entire population.</p>`},
+t2_pA:{title:"The Algorithm of Creativity",text:`<p>In 2023, an AI-generated artwork won first place at a state fine arts competition, sparking fierce debate about the nature of creativity. The winning piece, created using an AI image-generation tool by artist Jason Allen, was praised by judges for its "dreamlike quality" before its method of creation was widely known. The incident forced an uncomfortable reckoning: if a machine can produce work indistinguishable from human art, what exactly do we mean by "creativity"?</p><p>Defenders of human creativity point to intentionality—the idea that art requires conscious emotional experience and deliberate expression. A painter who depicts grief draws on lived experience in a way that an algorithm, which processes statistical patterns in existing images, fundamentally cannot. Yet this argument has a vulnerability: viewers who experienced the AI artwork reported genuine emotional responses. The art "worked" regardless of its origin.</p><p>Perhaps the more productive question is not whether AI can be creative, but how AI changes the landscape of human creativity. Just as photography did not eliminate painting but instead pushed artists toward Impressionism and abstraction, AI tools may redirect human creative energy toward forms of expression that machines cannot replicate—those rooted in vulnerability, ambiguity, and lived experience.</p>`},
+t2_pB:{title:"Reefs at the Crossroads",text:`<p>Coral reefs occupy less than one percent of the ocean floor yet support approximately twenty-five percent of all marine species. This extraordinary concentration of biodiversity has earned reefs the designation "rainforests of the sea," but the comparison extends beyond species count. Like tropical rainforests, coral reefs are reaching a critical tipping point.</p><p>Rising ocean temperatures cause coral bleaching—a process in which stressed corals expel the symbiotic algae that provide them with both nutrition and color. The Great Barrier Reef experienced mass bleaching events in 2016, 2017, 2020, and 2022, with each event affecting larger areas. Scientists estimate that the world has already lost roughly 14% of its coral reefs since 2009.</p><p>Yet emerging research offers cautious hope. Marine biologists in Hawaii have successfully bred "super corals" that tolerate temperatures two to three degrees Celsius above normal. Meanwhile, reef restoration projects in the Caribbean have demonstrated that damaged reefs can recover within 10 to 15 years if local stressors—such as overfishing and pollution—are adequately managed. The future of coral reefs may depend less on a single solution and more on the coordinated application of science, policy, and local stewardship.</p>`},
+t1m2_pA:{title:"The Sapir-Whorf Paradox",text:`<p>For over a century, linguists and cognitive scientists have debated whether the structure of a language influences the way its speakers perceive the world—a hypothesis known as linguistic relativity, or the Sapir-Whorf hypothesis. The strong version, linguistic determinism, holds that language determines thought and that linguistic categories limit cognitive categories. While this strong version has been largely discredited, a weaker version—linguistic influence—continues to generate compelling research.</p><p>Consider the Pirahã people of the Amazon, whose language contains no precise number words beyond "one" and "many." Studies by cognitive anthropologist Peter Gordon revealed that Pirahã speakers struggle with exact quantity matching tasks that speakers of languages with number systems find trivial. This finding supports the weak Sapir-Whorf hypothesis: the absence of numerical vocabulary appears to constrain, though not entirely prevent, certain numerical cognition.</p><p>Yet the relationship between language and thought is not unidirectional. Research on color perception demonstrates that while Russian speakers, who have separate words for light blue and dark blue, can discriminate between these shades faster than English speakers, they do not see colors differently in any fundamental sense. Language acts as a cognitive tool—it facilitates certain perceptual discriminations without creating them from nothing. The most accurate model may be one in which language and thought co-evolve, each shaping and being shaped by the other in a continuous feedback loop that defies simple causal attribution.</p>`},
+t1m2_pB:{title:"The Paradox of Plenty",text:`<p>In 1993, economist Richard Auty coined the term "resource curse" to describe a counterintuitive pattern: countries rich in natural resources often experience slower economic growth, less democracy, and worse development outcomes than their resource-poor counterparts. Nigeria, Venezuela, and the Democratic Republic of Congo—all blessed with abundant natural wealth—have struggled with corruption, conflict, and poverty, while resource-scarce nations like Japan, South Korea, and Switzerland have thrived.</p><p>The mechanisms behind this paradox are well-documented. Resource wealth tends to concentrate power in the hands of those who control extraction, creating rent-seeking behavior rather than productive entrepreneurship. Large resource revenues can cause "Dutch disease," where a booming resource sector drives up the exchange rate, making other exports uncompetitive. Moreover, governments funded by resource revenues rather than taxation have less incentive to be responsive to citizens.</p><p>However, the resource curse is not inevitable. Botswana, with its vast diamond reserves, has maintained strong democratic institutions and consistent economic growth since independence by investing resource revenues in education and infrastructure. Norway's sovereign wealth fund demonstrates that natural resource wealth can be managed responsibly across generations. The critical variable appears to be institutional quality at the time resources are discovered. Countries with established democratic institutions tend to manage resource wealth effectively, while those with weak institutions are more likely to fall victim to the curse. The resource curse, then, is less about resources and more about governance.</p>`},
+t2m2_pA:{title:"The CRISPR Dilemma",text:`<p>In 2012, Jennifer Doudna and Emmanuelle Charpentier published a paper describing how a bacterial immune system called CRISPR-Cas9 could be repurposed as a precise gene-editing tool. The technology offered unprecedented accuracy in cutting and modifying DNA sequences, and within three years, laboratories worldwide were using it to alter the genomes of plants, animals, and human cells. In 2020, Doudna and Charpentier received the Nobel Prize in Chemistry, cementing CRISPR's status as a transformative scientific achievement.</p><p>Yet the technology's power has generated as much anxiety as excitement. The 2018 announcement by Chinese scientist He Jiankui that he had created the world's first gene-edited babies—twins whose genomes had been modified to confer resistance to HIV—provoked near-universal condemnation from the scientific community. The objection was not merely procedural; He had bypassed established ethical review processes and engaged in germline editing, meaning the modifications would be heritable by future generations who could not consent to the change.</p><p>The deeper philosophical question concerns where to draw the line between therapeutic intervention and enhancement. Correcting the genetic mutation responsible for sickle cell disease appears morally unambiguous—the technology eliminates suffering without altering the fundamental nature of the individual. But what about editing for height, intelligence, or athletic ability? The challenge is that no clear boundary separates treatment from enhancement; the same technology that eliminates genetic disease could, in principle, be used to create designer children whose traits reflect parental preferences rather than natural variation. How societies navigate this boundary will shape not just medicine but our understanding of what it means to be human.</p>`},
+t2m2_pB:{title:"Two Ways of Knowing",text:`<p>Western science has long operated under the assumption that knowledge must be universal, replicable, and reducible to its component parts. A chemical reaction in Tokyo must produce the same results as in São Paulo; a biological process must be explicable in terms of molecular mechanisms. This epistemological framework has produced extraordinary advances in medicine, technology, and our understanding of the physical universe.</p><p>Indigenous knowledge systems, by contrast, tend to be relational, experiential, and place-specific. Aboriginal Australians developed sophisticated fire management techniques over tens of thousands of years—knowledge encoded not in peer-reviewed journals but in songlines, ceremonies, and oral traditions passed between generations. These techniques, which involve controlled burning at specific times and in specific patterns, reduce the risk of catastrophic wildfires while promoting biodiversity. When scientists began incorporating indigenous fire management practices into Australian land management policy, they found the outcomes matched or exceeded those of approaches based solely on Western scientific models.</p><p>The integration of these knowledge systems raises epistemological questions that resist easy answers. If indigenous fire management "works" but is grounded in spiritual frameworks that Western science cannot verify, does that undermine its validity? Some scholars argue that functionality should be the primary criterion—if a practice produces reliable, beneficial outcomes, the theoretical framework supporting it is secondary. Others contend that knowledge cannot be separated from the worldview that produces it, and that attempting to extract "useful" practices from indigenous contexts while discarding their philosophical foundations constitutes a form of intellectual colonialism. The resolution of this tension may require developing new epistemological frameworks that accommodate multiple ways of knowing without collapsing the differences between them.</p>`}
+};
+
+const QUESTIONS={test1:{
+ela:[
+{id:'t1e1',passage:'t1_pA',category:'reading-comp',q:'Which choice best states the main idea of the passage?',choices:['Urban trees are primarily decorative and serve little ecological purpose in cities','Recent discoveries about tree communication networks have important implications for urban planning and sustainability','Dr. Simard\'s research on trees was conducted exclusively in Melbourne, Australia','Urban heat island effects can be eliminated entirely through tree planting'],correct:1,explain:'The passage reveals underground tree networks and shows cities applying these findings to planning.'},
+{id:'t1e2',passage:'t1_pA',category:'vocab-context',q:'As used in the passage, "symbiotic" most nearly means:',choices:['parasitic','mutually beneficial','underground','artificial'],correct:1,explain:'"Symbiotic fungi" share nutrients and signals with trees—a mutually beneficial relationship.'},
+{id:'t1e3',passage:'t1_pA',category:'evidence',q:'Which finding best supports the idea that urban trees are more interconnected than previously believed?',choices:['Trees are registered individually in Melbourne','Trees in larger networks show 23% greater drought resilience','Copenhagen redesigned neighborhoods for trees','Air quality improved in certain urban areas'],correct:1,explain:'The 23% figure provides concrete evidence that underground networks directly benefit tree health.'},
+{id:'t1e4',passage:'t1_pA',category:'expression',q:'The author\'s primary purpose in the third paragraph is to:',choices:['criticize urban development practices','provide evidence of practical applications of the research findings','argue against the use of sensor technology in cities','compare different cities\' approaches to climate change'],correct:1,explain:'The third paragraph describes Copenhagen applying the research—practical applications.'},
+{id:'t1e5',passage:'t1_pA',category:'reading-comp',q:'It can reasonably be inferred from the passage that:',choices:['all cities have now adopted Melbourne\'s tree-monitoring system','traditional urban planning often ignored the biological relationships between trees','fungal networks are the only factor in urban tree health','climate change has had no measurable impact on urban trees'],correct:1,explain:'The passage states the research "challenges the long-held assumption that urban trees exist as solitary organisms."'},
+{id:'t1e6',passage:'t1_pB',category:'reading-comp',q:'The main purpose of the passage is to:',choices:['argue that Athenian democracy was superior to modern systems','trace the historical expansion of voting rights and the forces that shaped it','prove that economic status should determine voting eligibility','compare the voting rights of men and women exclusively'],correct:1,explain:'The passage traces suffrage from Athens through 19th-20th century movements.'},
+{id:'t1e7',passage:'t1_pB',category:'vocab-context',q:'As used in the passage, "self-evident" most nearly means:',choices:['proven through rigorous scientific study','obvious and requiring no explanation','debated among political scholars','unique to democratic nations'],correct:1,explain:'"Self-evident" means immediately apparent, needing no further proof.'},
+{id:'t1e8',passage:'t1_pB',category:'evidence',q:'Which choice provides the best evidence that the expansion of suffrage was not uniform across countries?',choices:['Athens excluded roughly 70% of its population','The Chartist movement demanded universal male suffrage','New Zealand granted women the vote in 1893, but France did not until 1944','Economic arguments were used to oppose expanded suffrage'],correct:2,explain:'The 51-year gap demonstrates very different rates of expansion.'},
+{id:'t1e9',passage:'t1_pB',category:'expression',q:'The author\'s tone regarding critics of expanded suffrage can best be described as:',choices:['sympathetic and understanding','neutral and detached','subtly dismissive of their reasoning','openly hostile and confrontational'],correct:2,explain:'The author notes critics\' arguments "functioned primarily to preserve existing power structures."'},
+{id:'t1e10',passage:'t1_pB',category:'reading-comp',q:'The final sentence of the passage serves primarily to:',choices:['introduce a new topic unrelated to the rest of the passage','provide a counterargument to the author\'s main claim','offer the author\'s interpretation of the significance of universal suffrage','summarize the complete timeline of voting rights expansion'],correct:2,explain:'The concluding sentence presents the author\'s interpretation—not summary.'},
+{id:'t1e11',passage:null,category:'grammar',q:'Which choice completes the sentence most appropriately?\n\n"The experiment yielded unexpected results. ___, the research team decided to extend the study."',choices:['Nevertheless','Consequently','Similarly','Meanwhile'],correct:1,explain:'"Consequently" shows cause and effect.'},
+{id:'t1e12',passage:null,category:'expression',q:'Which choice best combines the sentences?\n\n"The city invested heavily in renewable energy. Carbon emissions decreased by 15% over five years."',choices:['The city invested heavily in renewable energy, and carbon emissions decreased by 15% over five years.','The city invested heavily in renewable energy; as a result, carbon emissions decreased by 15% over five years.','The city invested heavily in renewable energy, carbon emissions decreased by 15% over five years.','Investing heavily in renewable energy, the city, which saw carbon emissions decrease by 15% over five years.'],correct:1,explain:'Option B correctly uses a semicolon with "as a result."'},
+{id:'t1e13',passage:null,category:'vocab-context',q:'Which choice provides the most precise word?\n\n"The speaker\'s ___ remarks captivated the audience for over two hours."',choices:['good','eloquent','nice','fine'],correct:1,explain:'"Eloquent" specifically means fluent and persuasive.'},
+{id:'t1e14',passage:null,category:'grammar',q:'Which sentence is grammatically correct?',choices:['Neither the students nor the teacher were aware of the schedule change.','Each of the participants have submitted their research proposals.','The committee, along with several advisors, has reviewed the proposal.','The data suggest that the hypothesis were correct.'],correct:2,explain:'"Committee" is singular → "has reviewed."'},
+{id:'t1e15',passage:null,category:'expression',q:'Which choice best maintains the style and tone?\n\n"Urban gardens have become increasingly popular in major metropolitan areas. ___ contribute to food security."',choices:['They','These green spaces','The things','It'],correct:1,explain:'"These green spaces" is precise and matches the formal tone.'},
+{id:'t1e16',passage:'t1_pA',category:'evidence',q:'The Copenhagen neighborhood redesign example primarily serves to:',choices:['suggest Copenhagen is the only city taking action','provide a real-world application validating the research findings','criticize cities that haven\'t redesigned','argue redesign is always the most effective approach'],correct:1,explain:'The example demonstrates practical application, validating the research.'},
+{id:'t1e17',passage:null,category:'grammar',q:'Which sentence correctly uses parallel structure?',choices:['The study required participants to complete a questionnaire, provide a blood sample, and were asked to attend a follow-up.','The study required participants to complete a questionnaire, providing a blood sample, and to attend a follow-up.','The study required participants to complete a questionnaire, provide a blood sample, and attend a follow-up.','The study required participants completing a questionnaire, to provide a blood sample, and attending a follow-up.'],correct:2,explain:'"Complete...provide...attend" are all base-form verbs.'},
+{id:'t1e18',passage:'t1_pB',category:'vocab-context',q:'As used in the passage, "accelerated" most nearly means:',choices:['suddenly stopped','gradually increased in speed or intensity','reversed direction completely','remained completely unchanged'],correct:1,explain:'The pace of expansion increased over time.'},
+{id:'t1e19',passage:null,category:'expression',q:'Which choice most effectively completes the text?\n\n"The researchers concluded the treatment was effective. ___, they recommended further testing."',choices:['For example,','However,','In other words,','As a consequence,'],correct:1,explain:'"However" signals a contrast between the positive finding and caution.'},
+{id:'t1e20',passage:'t1_pB',category:'reading-comp',q:'The statistic that Athens excluded "roughly 70% of the population" primarily:',choices:['proves Athens had a larger population than thought','illustrates how limited early democratic participation was','suggests Athens should not be considered democratic at all','provides evidence citizens were a small minority by accident'],correct:1,explain:'The 70% figure quantifies the gap between democratic ideals and practice.'}
+],
+math:[
+{id:'t1m1',category:'algebra',q:'If <span class="math-expr">3x + 7 = 22</span>, what is <span class="math-expr">6x + 14</span>?',choices:['30','44','52','60'],correct:1,explain:'6x + 14 = 2(3x + 7) = 2(22) = 44.'},
+{id:'t1m2',category:'algebra',q:'If <span class="math-expr">2x + y = 10</span> and <span class="math-expr">x − y = 2</span>, what is <span class="math-expr">x</span>?',choices:['2','3','4','6'],correct:2,explain:'Adding: 3x = 12, so x = 4.'},
+{id:'t1m3',category:'algebra',q:'If <span class="math-expr">f(x) = 2x − 5</span>, for what <span class="math-expr">x</span> does <span class="math-expr">f(x) = 11</span>?',choices:['3','6','8','16'],correct:2,explain:'2x − 5 = 11 → x = 8.'},
+{id:'t1m4',category:'algebra',q:'A company charges $50 plus $12/hour. Which inequality represents renting for at most $200?',choices:['50 + 12h ≤ 200','50 + 12h ≥ 200','12 + 50h ≤ 200','50h + 12 ≤ 200'],correct:0,explain:'Total cost = 50 + 12h ≤ 200.'},
+{id:'t1m5',category:'data-analysis',q:'A store marks up wholesale price by 40%, then offers 20% off. Wholesale = $100. Final price?',choices:['$108','$112','$120','$126'],correct:1,explain:'$100×1.40 = $140, then $140×0.80 = $112.'},
+{id:'t1m6',category:'data-analysis',q:'Boys:girls ratio is 3:5. If 480 students, how many girls?',choices:['180','200','280','300'],correct:3,explain:'Girls = 5/8 × 480 = 300.'},
+{id:'t1m7',category:'data-analysis',q:'Average of five numbers is 24. Four numbers: 18, 22, 28, 30. Fifth?',choices:['22','24','26','32'],correct:0,explain:'Sum = 120. Four known = 98. Fifth = 22.'},
+{id:'t1m8',category:'data-analysis',q:'3/8 prefer online. Of 600 surveyed, how many prefer in-person?',choices:['225','375','400','480'],correct:1,explain:'Online: 225. In-person: 375.'},
+{id:'t1m9',category:'adv-math',q:'If <span class="math-expr">x² − 5x + 6 = 0</span>, what are the solutions?',choices:['x=1 and x=6','x=2 and x=3','x=−2 and x=−3','x=−1 and x=−6'],correct:1,explain:'(x−2)(x−3) = 0 → x=2 or x=3.'},
+{id:'t1m10',category:'adv-math',q:'If <span class="math-expr">f(x) = x² + 3x − 4</span>, what is <span class="math-expr">f(−2)</span>?',choices:['−6','−2','2','6'],correct:0,explain:'4 − 6 − 4 = −6.'},
+{id:'t1m11',category:'adv-math',q:'If <span class="math-expr">2<sup>x</sup> = 32</span>, what is <span class="math-expr">2<sup>x+3</sup></span>?',choices:['64','128','256','512'],correct:2,explain:'32 × 8 = 256.'},
+{id:'t1m12',category:'geometry',q:'Right triangle: leg = 5, hypotenuse = 13. Other leg?',choices:['8','10','11','12'],correct:3,explain:'√(169−25) = 12.'},
+{id:'t1m13',category:'geometry',q:'Circle with diameter 10. Area?',choices:['10π','20π','25π','100π'],correct:2,explain:'π(5²) = 25π.'},
+{id:'t1m14',category:'geometry',q:'Distance between (1,2) and (4,6)?',choices:['4','5','6','7'],correct:1,explain:'√(9+16) = 5.'},
+{id:'t1m15',category:'geometry',q:'If <span class="math-expr">sin θ = 3/5</span>, θ in Q1, what is <span class="math-expr">cos θ</span>?',choices:['3/5','4/5','5/3','5/4'],correct:1,explain:'3-4-5 triangle: cos θ = 4/5.'},
+{id:'t1m16',category:'algebra',q:'Taxi: $3.50 base + $2.25/mile. Paid $17.00. Miles traveled?',choices:['4','5','6','7'],correct:2,explain:'3.50 + 2.25m = 17 → m = 6.'},
+{id:'t1m17',category:'data-analysis',q:'Average of 4 tests needed ≥ 85. Scores: 82, 90, 76. Min fourth score?',choices:['87','90','92','95'],correct:2,explain:'248 + x ≥ 340 → x ≥ 92.'},
+{id:'t1m18',category:'adv-math',q:'<span class="math-expr">x² + 10x + 21 = (x+a)(x+b)</span>, a,b positive. What is <span class="math-expr">a+b</span>?',choices:['7','10','12','21'],correct:1,explain:'(x+3)(x+7) → a+b = 10.'},
+{id:'t1m19',category:'geometry',q:'Rectangle: length 12, width 5. Diagonal?',choices:['10','12','13','17'],correct:2,explain:'√(144+25) = 13.'},
+{id:'t1m20',category:'algebra',q:'If <span class="math-expr">|2x − 6| = 10</span>, possible values of <span class="math-expr">x</span>?',choices:['x=8 only','x=−2 only','x=8 or x=−2','x=8 or x=2'],correct:2,explain:'2x−6=10→x=8, or 2x−6=−10→x=−2.'}
+],
+ela2:[
+{id:'t1e2m1',passage:'t1m2_pA',category:'reading-comp',q:'Which best describes the author\'s argument about language and cognition?',choices:['Language completely determines thought','Language has no meaningful effect on cognition','Language acts as a facilitating tool that shapes but does not determine thought','The Sapir-Whorf hypothesis has been entirely proven'],correct:2,explain:'Language "facilitates certain perceptual discriminations without creating them from nothing."'},
+{id:'t1e2m2',passage:'t1m2_pA',category:'vocab-context',q:'As used in the passage, "constrain" most nearly means:',choices:['prevent entirely','restrict or limit, though not necessarily eliminate','gradually strengthen over time','completely eliminate'],correct:1,explain:'The passage states vocabulary "appears to constrain, though not entirely prevent, certain numerical cognition"—meaning restrict or limit without fully eliminating.'},
+
+{id:'t1e2m3',passage:'t1m2_pA',category:'evidence',q:'Which finding would most weaken the author\'s central claim?',choices:['Russian speakers perceive blue light identically to English speakers','A language without future tense causes speakers to save more money regardless of other factors','Pirahã speakers can learn to count with training','Bilingual speakers switch personality traits between languages'],correct:1,explain:'If lacking future tense literally changes financial behavior, language may determine thought.'},
+{id:'t1e2m4',passage:'t1m2_pA',category:'expression',q:'The Pirahã example primarily serves to:',choices:['prove Pirahã are intellectually inferior','provide empirical support for the weak version of linguistic relativity','argue all languages should adopt number systems','demonstrate the strong hypothesis is correct'],correct:1,explain:'The example supports the weak hypothesis—absence of numerical vocabulary constrains cognition.'},
+{id:'t1e2m5',passage:'t1m2_pA',category:'reading-comp',q:'The passage most strongly suggests:',choices:['the strong version will eventually be validated','color research proves language doesn\'t affect cognition','the relationship between language and thought is bidirectional','scientists have reached consensus on linguistic relativity'],correct:2,explain:'"Language and thought co-evolve, each shaping and being shaped by the other."'},
+{id:'t1e2m6',passage:'t1m2_pB',category:'reading-comp',q:'The primary purpose of the passage is to:',choices:['argue resources are always harmful to developing countries','explain why some resource-rich nations succeed while others fail','prove Norway has the best economic system','suggest all countries should avoid natural resources'],correct:1,explain:'The passage explains the resource curse and why some countries avoid it.'},
+{id:'t1e2m7',passage:'t1m2_pB',category:'vocab-context',q:'As used in the passage, "rent-seeking" most nearly means:',choices:['purchasing property for investment','attempting to increase wealth without creating new value','seeking rental agreements for resource extraction','lobbying for lower rental rates'],correct:1,explain:'In economics, rent-seeking means pursuing wealth through manipulation rather than productive activity.'},
+{id:'t1e2m8',passage:'t1m2_pB',category:'evidence',q:'Norway\'s data best supports the passage\'s argument because Norway:',choices:['has no natural resources and thrives','manages resource wealth responsibly through institutions despite being resource-rich','proves all European countries are immune to the resource curse','eliminated corruption through resource wealth'],correct:1,explain:'Norway demonstrates that strong institutions allow resource-rich countries to thrive.'},
+{id:'t1e2m9',passage:'t1m2_pB',category:'expression',q:'The author\'s tone regarding the "resource curse" thesis is:',choices:['uncritically accepting','wholly dismissive','analytical, acknowledging the pattern while identifying conditions under which it doesn\'t apply','humorous and lighthearted'],correct:2,explain:'The author accepts the pattern but shows it\'s not inevitable—an analytical, nuanced stance.'},
+{id:'t1e2m10',passage:'t1m2_pB',category:'reading-comp',q:'The author would most likely agree:',choices:['resource wealth inevitably leads to decline','institutional quality at time of resource discovery is critical to outcomes','taxation-based governments are always superior','Botswana\'s success is due to geographic location'],correct:1,explain:'"The critical variable appears to be institutional quality at the time resources are discovered."'},
+{id:'t1e2m11',passage:null,category:'grammar',q:'Which sentence correctly uses a colon?',choices:['The study revealed three key findings: unexpected results, a new methodology, and a revised hypothesis.','The study revealed: three key findings, unexpected results, and a new methodology.','The study revealed three key findings which were: unexpected, surprising, and new.','The study: revealed three key findings that changed the field.'],correct:0,explain:'A colon follows a complete clause and introduces a list.'},
+{id:'t1e2m12',passage:null,category:'expression',q:'Which revision most effectively strengthens this argument?\n\n"Social media is bad for teenagers. Studies show they spend too much time on it."',choices:['Social media is bad for teenagers because they spend too much time on their phones, which is a real problem.','Research indicates adolescents exceeding two hours of daily social media use report 35% higher rates of anxiety and depression.','Social media is really, really bad for teenagers and something should be done.','It is important to note that social media, which is used by many teenagers, has been shown to be harmful in some studies.'],correct:1,explain:'Option B adds specific data making the argument evidence-based.'},
+{id:'t1e2m13',passage:null,category:'grammar',q:'Which sentence maintains parallel structure while being concise?',choices:['The program aims to reduce poverty, improving education, and the promotion of health initiatives.','The program aims to reduce poverty, improve education, and promote health initiatives.','The program aims at reducing poverty, to improve education, and promoting health initiatives.','The program has aims that include poverty reduction, education improvement, and health promotion being done.'],correct:1,explain:'"Reduce...improve...promote" are all base-form verbs following "aims to."'},
+{id:'t1e2m14',passage:null,category:'vocab-context',q:'Which word best completes this sentence?\n\n"The professor\'s ___ explanation left even advanced students struggling."',choices:['bad','convoluted','hard','unclear'],correct:1,explain:'"Convoluted" precisely means extremely complex and difficult to follow.'},
+{id:'t1e2m15',passage:null,category:'grammar',q:'Which sentence uses a dash correctly?',choices:['The three researchers—who had worked for years—finally published their results.','The three researchers—who had worked for years, finally published their results.','The three—researchers who had worked for years—finally published their results.','The three researchers who had—worked for years—finally published their results.'],correct:0,explain:'Dashes enclose the parenthetical phrase as a pair.'},
+{id:'t1e2m16',passage:'t1m2_pA',category:'reading-comp',q:'The Russian color terminology discussion suggests:',choices:['Russian is superior to English for describing colors','more vocabulary enables faster discrimination but not fundamentally different perception','color perception is entirely determined by language','English speakers can\'t distinguish blue shades'],correct:1,explain:'Faster discrimination but "no fundamentally different sense"—facilitation, not determination.'},
+{id:'t1e2m17',passage:'t1m2_pB',category:'evidence',q:'Which provides the best evidence that the author acknowledges limits of the resource curse theory?',choices:['Mentioning Nigeria, Venezuela, and DRC as examples','Describing Dutch disease mechanisms','Examples of Botswana and Norway as countries that avoided the curse','Stating governments funded by resources have less citizen accountability'],correct:2,explain:'Showing successful resource-rich countries acknowledges the theory\'s limits.'},
+{id:'t1e2m18',passage:'t1m2_pB',category:'vocab-context',q:'As used in the passage, "counterintuitive" most nearly means:',choices:['confirmed by extensive experimental research','contrary to what one would naturally expect','widely accepted among economists','deliberately designed to be misleading'],correct:1,explain:'The passage describes the resource curse as a "counterintuitive pattern"—countries with MORE natural resources have WORSE outcomes, which is contrary to what one would naturally expect.'},
+
+{id:'t1e2m19',passage:null,category:'grammar',q:'Which correctly punctuates the sentence?\n\n"The researchers concluded the treatment was effective however they cautioned the sample was too small."',choices:['effective; however, they','effective, however they','effective. However, they','effective, however, they'],correct:0,explain:'Semicolon before "however" (conjunctive adverb) with comma after.'},
+{id:'t1e2m20',passage:null,category:'expression',q:'Which transition best connects these sentences?\n\n"The initial results were promising. ___ the long-term effects remain unknown."',choices:['Similarly,','Furthermore,','Nevertheless,','In other words,'],correct:2,explain:'"Nevertheless" signals a contrast between promising results and unknown long-term effects.'}
+],
+math2:[
+{id:'t1m2m1',category:'adv-math',q:'If <span class="math-expr">4<sup>x</sup> + 4<sup>−x</sup> = 6</span>, what is <span class="math-expr">16<sup>x</sup> + 16<sup>−x</sup></span>?',choices:['30','32','34','36'],correct:2,explain:'Let a=4^x. a+1/a=6. Squaring: a²+2+1/a²=36, so a²+1/a²=34. Since 16^x=a², answer is 34.'},
+{id:'t1m2m2',category:'adv-math',q:'f(1)=2, f(2)=5, f(n)=f(n−1)+f(n−2). What is f(6)?',choices:['24','29','31','33'],correct:2,explain:'f(3)=7, f(4)=12, f(5)=19, f(6)=31.'},
+{id:'t1m2m3',category:'geometry',q:'Right triangle legs 6 and 8. Perpendicular from right angle to hypotenuse has what length?',choices:['4.0','4.5','4.8','5.2'],correct:2,explain:'Hypotenuse=10, area=24. ½(10)(h)=24 → h=4.8.'},
+{id:'t1m2m4',category:'adv-math',q:'If <span class="math-expr">log₂(x) + log₂(x−2) = 3</span>, what is <span class="math-expr">x</span>?',choices:['2','3','4','6'],correct:2,explain:'x(x−2)=8 → x²−2x−8=0 → (x−4)(x+2)=0 → x=4.'},
+{id:'t1m2m5',category:'adv-math',q:'a₁=3, aₙ=2aₙ₋₁−1. What is a₅?',choices:['17','25','33','65'],correct:2,explain:'3, 5, 9, 17, 33.'},
+{id:'t1m2m6',category:'adv-math',q:'How many x-intercepts does <span class="math-expr">f(x) = |x² − 4x + 3|</span> have?',choices:['0','1','2','4'],correct:2,explain:'x²−4x+3=(x−1)(x−3)=0 at x=1,3. Abs value preserves these intercepts.'},
+{id:'t1m2m7',category:'algebra',q:'If <span class="math-expr">x+y=7</span> and <span class="math-expr">x²+y²=29</span>, what is <span class="math-expr">x³+y³</span>?',choices:['119','133','147','161'],correct:1,explain:'xy=(49−29)/2=10. x³+y³=7(29−10)=7(19)=133.'},
+{id:'t1m2m8',category:'geometry',q:'Triangle vertices: (0,0), (6,0), (2,8). Area?',choices:['16','20','24','28'],correct:2,explain:'½|0+6(8)+2(0)| = ½(48) = 24.'},
+{id:'t1m2m9',category:'algebra',q:'<span class="math-expr">y=ax²+bx+c</span> passes through (−1,−8), (2,1), (5,−8). What is <span class="math-expr">a</span>?',choices:['−3','−1','1','3'],correct:1,explain:'Axis of symmetry at x=2 (since f(−1)=f(5)=−8). b=−4a. −4a+c=1, 5a+c=−8 → a=−1.'},
+{id:'t1m2m10',category:'data-analysis',q:'Average of 5 numbers is 20. Average of 3 of them is 15. Average of other 2?',choices:['22.5','25.0','27.5','30.0'],correct:2,explain:'Total=100. Three=45. Other two=55. Avg=27.5.'},
+{id:'t1m2m11',category:'data-analysis',q:'5 people in a row, 2 specific people must sit together. How many arrangements?',choices:['24','48','60','120'],correct:1,explain:'4!×2! = 24×2 = 48.'},
+{id:'t1m2m12',category:'adv-math',q:'If <span class="math-expr">sin θ + cos θ = 7/5</span>, what is <span class="math-expr">sin θ · cos θ</span>?',choices:['12/25','1/2','24/25','49/25'],correct:0,explain:'Squaring: 1+2sinθcosθ=49/25 → sinθcosθ=12/25.'},
+{id:'t1m2m13',category:'geometry',q:'Circle inscribed in square with side 10. Area inside square but outside circle?',choices:['100−25π','100−10π','75','100π−25'],correct:0,explain:'100−π(25)=100−25π.'},
+{id:'t1m2m14',category:'adv-math',q:'For what positive <span class="math-expr">k</span> does <span class="math-expr">x²+kx+9=0</span> have exactly one solution?',choices:['3','6','9','12'],correct:1,explain:'k²−36=0 → k=6.'},
+{id:'t1m2m15',category:'adv-math',q:'g(x)=2x+1 and g(f(x))=4x²+1. What is f(x)?',choices:['2x²','2x²+1','4x²','x²'],correct:0,explain:'2f(x)+1=4x²+1 → f(x)=2x².'},
+{id:'t1m2m16',category:'adv-math',q:'Remainder when <span class="math-expr">x³−2x²+3x−4</span> is divided by <span class="math-expr">(x−1)</span>?',choices:['−4','−2','0','2'],correct:1,explain:'p(1)=1−2+3−4=−2.'},
+{id:'t1m2m17',category:'data-analysis',q:'60% like A, 50% like B, 30% like both. Percent who like neither?',choices:['10%','15%','20%','25%'],correct:2,explain:'60%+50%−30%=80% like at least one. Neither: 20%.'},
+{id:'t1m2m18',category:'algebra',q:'If <span class="math-expr">a/b=3/4</span> and <span class="math-expr">b/c=2/5</span>, what is <span class="math-expr">a/c</span>?',choices:['3/10','6/20','1/3','3/5'],correct:0,explain:'a/c=(3/4)(2/5)=6/20=3/10.'},
+{id:'t1m2m19',category:'data-analysis',q:'How many integers from 100–999 have all three digits different?',choices:['504','648','729','810'],correct:1,explain:'9×9×8=648.'},
+{id:'t1m2m20',category:'geometry',q:'Circle tangent to both axes, passes through (2,4), center (r,r) with r>5. What is r?',choices:['2','5','8','10'],correct:3,explain:'(r−2)²+(r−4)²=r² → r²−12r+20=0 → r=10 (since r>5).'}
+]},
+test2:{
+ela:[
+{id:'t2e1',passage:'t2_pA',category:'reading-comp',q:'The central concern of the passage is:',choices:['AI art competitions should be banned','whether AI-generated art challenges our understanding of creativity','Jason Allen is the most talented AI artist','photography eliminated traditional painting'],correct:1,explain:'The passage revolves around what creativity means when AI produces art indistinguishable from human work.'},
+{id:'t2e2',passage:'t2_pA',category:'vocab-context',q:'As used in the passage, "reckoning" most nearly means:',choices:['financial calculation','a moment of judgment or serious consideration','an artistic technique','a mathematical equation'],correct:1,explain:'"An uncomfortable reckoning" means a moment requiring serious confrontation with a difficult truth.'},
+{id:'t2e3',passage:'t2_pA',category:'evidence',q:'The author mentions photography and Impressionism to:',choices:['argue technology always destroys art','suggest AI might redirect rather than replace human creativity','prove AI art is superior','demonstrate photography was a commercial failure'],correct:1,explain:'A historical parallel for how AI might redirect human creativity.'},
+{id:'t2e4',passage:'t2_pA',category:'reading-comp',q:'Defenders of human creativity base their argument primarily on:',choices:['technical superiority of human skills','conscious experience and intentionality in creating art','AI\'s inability to produce visual imagery','judge preferences'],correct:1,explain:'"Point to intentionality—the idea that art requires conscious emotional experience."'},
+{id:'t2e5',passage:'t2_pA',category:'expression',q:'The author\'s attitude toward AI art is:',choices:['hostile','uncritically enthusiastic','thoughtful, examining multiple perspectives','indifferent'],correct:2,explain:'Multiple viewpoints presented thoughtfully.'},
+{id:'t2e6',passage:'t2_pB',category:'reading-comp',q:'The passage is primarily concerned with:',choices:['why all reefs will disappear','reefs\' importance, threats, and potential solutions','arguing restoration is wasteful','comparing ocean and freshwater biodiversity'],correct:1,explain:'Para 1: importance. Para 2: threats. Para 3: solutions.'},
+{id:'t2e7',passage:'t2_pB',category:'evidence',q:'The "25% of species / 1% of floor" statistic primarily serves to:',choices:['argue the ocean is too large to study','emphasize reefs\' disproportionate ecological significance','suggest species don\'t depend on reefs','prove reefs are indestructible'],correct:1,explain:'The contrast emphasizes outsized ecological importance.'},
+{id:'t2e8',passage:'t2_pB',category:'expression',q:'The third paragraph\'s function is to:',choices:['contradict earlier paragraphs','shift from problem to potential solutions','introduce an unrelated topic','conclude no solutions exist'],correct:1,explain:'"Yet emerging research offers cautious hope" signals the shift.'},
+{id:'t2e9',passage:'t2_pB',category:'reading-comp',q:'"Super corals" and Caribbean projects suggest:',choices:['the crisis is completely solved','multiple approaches may address reef degradation','only technology works','local stewardship is unnecessary'],correct:1,explain:'Both technological and management approaches are presented.'},
+{id:'t2e10',passage:'t2_pB',category:'vocab-context',q:'As used, "stewardship" most nearly means:',choices:['scientific research','responsible management and care','government regulation','financial investment'],correct:1,explain:'Responsible, careful management of reef ecosystems.'},
+{id:'t2e11',passage:null,category:'expression',q:'Most effective opening for a paragraph about renewable energy?',choices:['Energy is something everyone uses every day.','Solar and wind power have become cost-competitive with fossil fuels, reshaping global energy markets.','I think renewable energy is really important.','In my opinion, we should use more solar panels.'],correct:1,explain:'Specific, factual, and sets up substantive discussion.'},
+{id:'t2e12',passage:null,category:'grammar',q:'The committee ___ been deliberating, and its members ___ reached consensus.',choices:['have; has','has; have','have; have','has; has'],correct:1,explain:'"Committee" singular → "has." "Members" plural → "have."'},
+{id:'t2e13',passage:null,category:'grammar',q:'Which uses a semicolon correctly?',choices:['The experiment was a success; because results exceeded expectations.','The experiment was a success; the results exceeded expectations.','The experiment was a success; however results exceeded expectations.','The experiment; was a complete success.'],correct:1,explain:'Semicolon joins two independent clauses.'},
+{id:'t2e14',passage:null,category:'expression',q:'Which most effectively combines these sentences?\n\n"The museum unveiled a new exhibit. The exhibit focuses on indigenous art. The opening attracted 500 visitors."',choices:['The museum unveiled a new exhibit, the exhibit focuses on indigenous art, the opening attracted 500 visitors.','The museum unveiled a new exhibit focusing on indigenous art; the opening attracted over 500 visitors.','The museum unveiled a new exhibit focusing on indigenous art, and which attracted 500 visitors.','Having unveiled a new exhibit focusing on indigenous art, the museum\'s opening attracted 500 visitors.'],correct:1,explain:'Concise, no comma splices or dangling modifiers.'},
+{id:'t2e15',passage:null,category:'grammar',q:'Which best maintains formal academic tone?',choices:['The results were super surprising and nobody expected them.','The results were, to put it mildly, quite unexpected.','The findings proved unexpectedly significant, challenging the initial hypothesis.','Boy, were the results ever a complete shock!'],correct:2,explain:'Precise, formal language for academic writing.'},
+{id:'t2e16',passage:'t2_pA',category:'reading-comp',q:'Viewers\' "genuine emotional responses" are mentioned to:',choices:['prove AI art is superior','challenge that art requires conscious experience by showing effects regardless of origin','suggest viewers were deceived','argue emotional responses are unreliable'],correct:1,explain:'Responses question whether consciousness is necessary for art to "work."'},
+{id:'t2e17',passage:'t2_pB',category:'vocab-context',q:'As used, "coordinated" most nearly means:',choices:['separately managed','brought together in an organized way','scientifically impossible','financially supported'],correct:1,explain:'Working together in an organized manner.'},
+{id:'t2e18',passage:null,category:'grammar',q:'Which is grammatically correct?',choices:['The scientist who published the study, along with her colleagues, were awarded the prize.','The scientist who published the study, along with her colleagues, was awarded the prize.','The scientist, who published the study along with her colleagues, were awarded the prize.','The scientist who published the study along with her colleagues, was awarded the prize.'],correct:1,explain:'Subject is "The scientist" (singular) → "was."'},
+{id:'t2e19',passage:null,category:'expression',q:'Which most effectively combines these sentences?\n\n"The researcher published findings. The findings challenged prevailing theory. The community responded with skepticism."',choices:['The researcher published findings that challenged prevailing theory, which the community responded with skepticism.','Publishing findings that challenged prevailing theory, the community responded with skepticism.','When the researcher published findings challenging prevailing theory, the community responded with skepticism.','The researcher published findings that challenged theory, and the community responded with skepticism, which was notable.'],correct:2,explain:'A subordinate clause combines all three ideas clearly.'},
+{id:'t2e20',passage:null,category:'grammar',q:'Which correctly completes the sentence?\n\n"The ___ results surprised even the researchers."',choices:["researchers'","researcher's","researchers's","researchers"],correct:0,explain:'Plural possessive: researchers\'.'}
+],
+math:[
+{id:'t2m1',category:'algebra',q:'If <span class="math-expr">5(x−3)=2(x+6)</span>, what is <span class="math-expr">x</span>?',choices:['3','5','7','9'],correct:3,explain:'5x−15=2x+12 → x=9.'},
+{id:'t2m2',category:'algebra',q:'Line through (2,7) and (4,13). Slope?',choices:['2','3','4','6'],correct:1,explain:'(13−7)/(4−2)=3.'},
+{id:'t2m3',category:'algebra',q:'If <span class="math-expr">3x+2y=16</span> and <span class="math-expr">x=2</span>, what is <span class="math-expr">y</span>?',choices:['2','4','5','6'],correct:2,explain:'6+2y=16 → y=5.'},
+{id:'t2m4',category:'algebra',q:'If <span class="math-expr">−3x+9>0</span>, solution set?',choices:['x>3','x<3','x>−3','x<−3'],correct:1,explain:'x<3 (flip inequality).'},
+{id:'t2m5',category:'data-analysis',q:'Ratio 2:3:5. 60 marbles. Green?',choices:['12','18','24','30'],correct:3,explain:'5/10×60=30.'},
+{id:'t2m6',category:'data-analysis',q:'$80 shirt, 25% off, then 10% off. Final price?',choices:['$48','$52','$54','$56'],correct:2,explain:'$60×0.90=$54.'},
+{id:'t2m7',category:'data-analysis',q:'Median of {3,7,8,x,12,14} is 9. What is x?',choices:['8','9','10','11'],correct:2,explain:'If x=10, median=(8+10)/2=9.'},
+{id:'t2m8',category:'data-analysis',q:'240 miles, 8 gal at $3.50/gal. Cost per mile?',choices:['$0.08','$0.10','$0.12','$0.15'],correct:2,explain:'$28/240≈$0.12.'},
+{id:'t2m9',category:'adv-math',q:'<span class="math-expr">(x+3)(x−7)=0</span>. Sum of solutions?',choices:['−4','4','−10','10'],correct:1,explain:'−3+7=4.'},
+{id:'t2m10',category:'adv-math',q:'<span class="math-expr">g(x)=3(2)<sup>x</sup></span>. What is <span class="math-expr">g(4)</span>?',choices:['24','48','64','96'],correct:1,explain:'3×16=48.'},
+{id:'t2m11',category:'adv-math',q:'<span class="math-expr">x²+8x+k=0</span> has exactly one solution. What is <span class="math-expr">k</span>?',choices:['4','8','16','32'],correct:2,explain:'k²−36=0 → k=16. Wait: 64−4k=0 → k=16.'},
+{id:'t2m12',category:'geometry',q:'Right triangle legs 6 and 8. Hypotenuse?',choices:['9','10','12','14'],correct:1,explain:'√100=10.'},
+{id:'t2m13',category:'geometry',q:'Triangle area: base 12, height 5?',choices:['17','24','30','60'],correct:2,explain:'½×12×5=30.'},
+{id:'t2m14',category:'geometry',q:'Circle at (3,−2) radius 4. Equation?',choices:['(x−3)²+(y+2)²=4','(x+3)²+(y−2)²=16','(x−3)²+(y+2)²=16','(x−3)²+(y−2)²=16'],correct:2,explain:'Standard form with center (3,−2) and r=4.'},
+{id:'t2m15',category:'geometry',q:'<span class="math-expr">tan θ=5/12</span>, θ in Q1. What is <span class="math-expr">sin θ</span>?',choices:['5/12','5/13','12/13','13/5'],correct:1,explain:'Hypotenuse=13. sin θ=5/13.'},
+{id:'t2m16',category:'algebra',q:'Notebooks $4, pens $2. 10 items for $28. Notebooks?',choices:['3','4','5','6'],correct:1,explain:'4n+2(10−n)=28 → n=4.'},
+{id:'t2m17',category:'data-analysis',q:'5 red, 3 blue, 2 green. P(not green)?',choices:['1/5','2/5','3/5','4/5'],correct:3,explain:'8/10=4/5.'},
+{id:'t2m18',category:'adv-math',q:'<span class="math-expr">(x²−9)/(x+3)=7</span>. What is <span class="math-expr">x</span>?',choices:['4','7','10','13'],correct:2,explain:'x−3=7 → x=10.'},
+{id:'t2m19',category:'geometry',q:'Cylinder: radius 3, height 8. Volume?',choices:['24π','48π','72π','96π'],correct:2,explain:'π(9)(8)=72π.'},
+{id:'t2m20',category:'algebra',q:'<span class="math-expr">f(x)=(x−4)²+3</span> from <span class="math-expr">g(x)=x²</span>. Transformation?',choices:['4 left, 3 up','4 right, 3 up','4 left, 3 down','4 right, 3 down'],correct:1,explain:'Right 4, up 3.'}
+],
+ela2:[
+{id:'t2e2m1',passage:'t2m2_pA',category:'reading-comp',q:'The author\'s primary purpose is to:',choices:['argue CRISPR should be banned','examine CRISPR\'s achievement alongside its ethical dilemmas','prove He Jiankui\'s experiment was sound','suggest all gene editing is morally equivalent'],correct:1,explain:'Presents CRISPR as transformative while examining the ethical boundary between treatment and enhancement.'},
+{id:'t2e2m2',passage:'t2m2_pA',category:'vocab-context',q:'As used, "heritable" most nearly means:',choices:['expensive to produce','capable of being passed to future generations','legally protected','medically approved'],correct:1,explain:'Modifications would be passed to descendants.'},
+{id:'t2e2m3',passage:'t2m2_pA',category:'evidence',q:'The sickle cell disease example is presented to:',choices:['prove all gene editing is justified','establish a clear therapeutic case before introducing the harder enhancement question','suggest sickle cell is the only appropriate use','argue diseases shouldn\'t be treated'],correct:1,explain:'Establishes a baseline on the ethical spectrum before harder cases.'},
+{id:'t2e2m4',passage:'t2m2_pA',category:'reading-comp',q:'The scientific community condemned He Jiankui primarily because:',choices:['his experiment failed','he violated ethics and made heritable modifications without consent','he used outdated technology','other scientists were jealous'],correct:1,explain:'"Bypassed established ethical review processes" and "heritable by future generations who could not consent."'},
+{id:'t2e2m5',passage:'t2m2_pA',category:'expression',q:'The final paragraph\'s rhetorical strategy:',choices:['provides a definitive answer','presents an unresolved tension and its broader implications','lists all possible CRISPR applications','dismisses gene editing concerns'],correct:1,explain:'"No clear boundary" and implications for "what it means to be human"—unresolved tension.'},
+{id:'t2e2m6',passage:'t2m2_pB',category:'reading-comp',q:'The passage primarily serves to:',choices:['argue indigenous knowledge is always superior','explore epistemological challenges of integrating different knowledge systems','prove Aboriginal fire management is the only effective approach','suggest Western science should be abandoned'],correct:1,explain:'Explores how to integrate different ways of knowing.'},
+{id:'t2e2m7',passage:'t2m2_pB',category:'vocab-context',q:'As used, "epistemological" most nearly means:',choices:['relating to knowledge acquisition and methods','relating to ethical principles','relating to political governance','relating to experimentation methods'],correct:1,explain:'"Epistemological" refers to the theory of knowledge.'},
+{id:'t2e2m8',passage:'t2m2_pB',category:'evidence',q:'Aboriginal fire management success primarily supports:',choices:['Western science is always inferior','different frameworks can produce equally valid practical outcomes','spiritual frameworks are scientifically verifiable','all indigenous knowledge should be adopted as-is'],correct:1,explain:'Practices "matched or exceeded" Western approaches—different frameworks, same valid outcomes.'},
+{id:'t2e2m9',passage:'t2m2_pB',category:'expression',q:'The author\'s tone on integrating knowledge systems is:',choices:['dismissive of both','sympathetic to indigenous knowledge while acknowledging complexity','hostile toward Western science','neutral to the point of no perspective'],correct:2,explain:'Respectful toward indigenous knowledge while acknowledging "questions that resist easy answers."'},
+{id:'t2e2m10',passage:'t2m2_pB',category:'reading-comp',q:'Scholars who argue knowledge can\'t be separated from its worldview would most object to:',choices:['all cross-cultural communication','extracting useful practices while discarding philosophical foundations','Western science in any context','the idea fire management reduces wildfire risk'],correct:1,explain:'Selective extraction constitutes "intellectual colonialism" to this view.'},
+{id:'t2e2m11',passage:'t2m2_pA',category:'reading-comp',q:'The sickle cell vs. He Jiankui distinction is that:',choices:['sickle cell is less scientifically complex','sickle cell eliminates suffering without altering nature; He made heritable modifications to unconsenting future generations','He\'s was more successful','both involve germline cells equally'],correct:1,explain:'Sickle cell: "morally unambiguous." He: consent issues and fundamental alteration.'},
+{id:'t2e2m12',passage:null,category:'grammar',q:'Which correctly uses a semicolon to join clauses?',choices:['The committee reviewed all proposals; and selected the strongest candidate.','The committee reviewed all proposals; they selected the strongest after deliberation.','The committee reviewed all; proposals carefully selected.','The committee; reviewed all proposals.'],correct:1,explain:'Two complete independent clauses joined by semicolon.'},
+{id:'t2e2m13',passage:'t2m2_pB',category:'vocab-context',q:'As used, "replicable" most nearly means:',choices:['understandable by anyone','capable of being reproduced with the same results','storable in written form','communicable across cultures'],correct:1,explain:'Capable of being reproduced yielding the same results.'},
+{id:'t2e2m14',passage:null,category:'expression',q:'Which most effectively develops this claim?\n\n"Remote work has fundamentally changed the modern workplace."',choices:['A lot of people work from home now.','According to a 2024 Stanford study, 28% of employees work remotely, with companies reporting 13% productivity increases.','Working from home is definitely the future.','Many companies changed their policies recently.'],correct:1,explain:'Specific data from a credible source supports the claim.'},
+{id:'t2e2m15',passage:null,category:'grammar',q:'Which correctly uses an em dash for emphasis?',choices:['The solution—was surprisingly simple.','The solution was surprisingly simple—once the variable was identified, everything fell into place.','The solution was—surprisingly simple—once identified.','The—solution was surprisingly simple.'],correct:1,explain:'Creates dramatic pause leading into an explanatory clause.'},
+{id:'t2e2m16',passage:'t2m2_pA',category:'expression',q:'The treatment vs. enhancement discussion functions to:',choices:['provide a clear policy recommendation','illustrate the difficulty of drawing ethical lines along a continuum','argue enhancement is always wrong','prove CRISPR should only be medical'],correct:1,explain:'"No clear boundary separates treatment from enhancement"—difficulty of drawing lines.'},
+{id:'t2e2m17',passage:'t2m2_pB',category:'evidence',q:'Best evidence that integration is seen as ethically problematic?',choices:['Aboriginal fire management description','Australian vs. Western approach comparison','Characterizing selective extraction as "intellectual colonialism"','Songlines and oral traditions as knowledge vehicles'],correct:2,explain:'"Intellectual colonialism" is a strong ethical objection.'},
+{id:'t2e2m18',passage:null,category:'grammar',q:'Which corrects the dangling modifier?\n\n"After reviewing the data, the conclusions were published."',choices:['After reviewing the data, the journal published the conclusions.','After the data was reviewed, conclusions were published.','After reviewing the data, the researchers published their conclusions.','The conclusions, after reviewing the data, were published.'],correct:2,explain:'"Researchers" is the logical subject performing the action.'},
+{id:'t2e2m19',passage:null,category:'expression',q:'Most effective concluding sentence for an essay on biodiversity?',choices:['This is why we should care about animals.','Preserving biodiversity is not merely an environmental concern but a prerequisite for human civilization\'s viability.','In conclusion, biodiversity is important.','So basically, we need to save the planet.'],correct:1,explain:'Elevates from summary to interpretation in formal, precise language.'},
+{id:'t2e2m20',passage:null,category:'grammar',q:'Which uses a restrictive clause correctly?',choices:['The students, who completed the module, earned extra credit.','The students who completed the module earned extra credit.','The students who completed, the module earned extra credit.','The students, who completed the module earned extra credit.'],correct:1,explain:'Without commas, "who completed the module" specifies WHICH students.'}
+],
+math2:[
+{id:'t2m2m1',category:'adv-math',q:'If <span class="math-expr">f(x)=x/(x+1)</span>, what is <span class="math-expr">f(f(2))</span>?',choices:['1/2','2/5','3/7','1/3'],correct:1,explain:'f(2)=2/3. f(2/3)=(2/3)/(5/3)=2/5.'},
+{id:'t2m2m2',category:'adv-math',q:'<span class="math-expr">2<sup>a</sup>=3</span> and <span class="math-expr">2<sup>b</sup>=5</span>. What is <span class="math-expr">2<sup>2a−b</sup></span>?',choices:['1','9/5','3','45'],correct:1,explain:'(2^a)²/2^b=9/5.'},
+{id:'t2m2m3',category:'data-analysis',q:'4 red, 3 blue, 2 green. 3 drawn without replacement. P(all different colors)?',choices:['1/3','2/7','4/21','8/27'],correct:1,explain:'Favorable: 4×3×2=24. Total C(9,3)=84. P=24/84=2/7.'},
+{id:'t2m2m4',category:'algebra',q:'Lines <span class="math-expr">y=2x+1</span> and <span class="math-expr">y=−x+7</span> intersect at P. Distance from P to origin?',choices:['3','√29','√33','7'],correct:1,explain:'x=2,y=5. P=(2,5). d=√(4+25)=√29.'},
+{id:'t2m2m5',category:'algebra',q:'<span class="math-expr">x²+y²=25</span> and <span class="math-expr">xy=12</span>. What is <span class="math-expr">(x−y)²</span>?',choices:['1','5','13','25'],correct:0,explain:'x²−2xy+y²=25−24=1.'},
+{id:'t2m2m6',category:'algebra',q:'For what <span class="math-expr">x</span> is <span class="math-expr">|2x−5|<3</span>?',choices:['1<x<4','x>4 or x<1','x<−1 or x>4','−1<x<4'],correct:0,explain:'−3<2x−5<3 → 1<x<4.'},
+{id:'t2m2m7',category:'geometry',q:'Regular hexagon side 6. Area?',choices:['36√3','54√3','72√3','108√3'],correct:1,explain:'(3√3/2)(36)=54√3.'},
+{id:'t2m2m8',category:'adv-math',q:'Zeros of <span class="math-expr">x³−6x²+11x−6</span>?',choices:['−1,−2,−3','1,2,3','0,1,6','−1,2,−3'],correct:1,explain:'(x−1)(x−2)(x−3). Zeros: 1,2,3.'},
+{id:'t2m2m9',category:'data-analysis',q:'Average of 3, 7, 12, x, 2x is 11. What is x?',choices:['8','9','10','11'],correct:3,explain:'(22+3x)/5=11 → x=11.'},
+{id:'t2m2m10',category:'geometry',q:'<span class="math-expr">tan θ=7/24</span>, θ in Q1. What is <span class="math-expr">cos θ</span>?',choices:['7/25','24/25','25/7','25/24'],correct:1,explain:'Hypotenuse=25. cos θ=24/25.'},
+{id:'t2m2m11',category:'adv-math',q:'Vertex of <span class="math-expr">f(x)=(x+3)²−4</span>?',choices:['(3,−4)','(−3,−4)','(3,4)','(−3,4)'],correct:1,explain:'Vertex at (h,k)=(−3,−4).'},
+{id:'t2m2m12',category:'adv-math',q:'<span class="math-expr">f(x)=√(2x+3)</span>. For what <span class="math-expr">x</span> does <span class="math-expr">f(x)=5</span>?',choices:['8','10','11','13'],correct:2,explain:'2x+3=25 → x=11.'},
+{id:'t2m2m13',category:'geometry',q:'Similar cylinders volumes in ratio 8:27. Ratio of heights?',choices:['2:3','4:9','8:27','2:9'],correct:0,explain:'∛(8/27)=2/3.'},
+{id:'t2m2m14',category:'geometry',q:'Period of <span class="math-expr">f(x)=4sin(3x−π/2)</span>?',choices:['2π/3','π/3','2π','4π/3'],correct:0,explain:'Period=2π/3.'},
+{id:'t2m2m15',category:'algebra',q:'<span class="math-expr">x²+y²=10</span> and <span class="math-expr">x+y=4</span>. How many solutions?',choices:['0','1','2','3'],correct:2,explain:'2x²−8x+6=0 → (x−1)(x−3)=0. Two solutions.'},
+{id:'t2m2m16',category:'data-analysis',q:'Consecutive integers a<b<c, a+b+c=30. Product abc?',choices:['720','990','1320','2730'],correct:1,explain:'9×10×11=990.'},
+{id:'t2m2m17',category:'adv-math',q:'<span class="math-expr">x=√(7+4√3)+√(7−4√3)</span>. What is <span class="math-expr">x²</span>?',choices:['12','14','16','20'],correct:2,explain:'14+2√(49−48)=14+2=16.'},
+{id:'t2m2m18',category:'adv-math',q:'<span class="math-expr">f(x)=x³+2x−5</span> and <span class="math-expr">f(a)=0</span>. What is <span class="math-expr">f(−a)</span>?',choices:['−15','−10','−5','0'],correct:1,explain:'f(−a)=−(a³+2a)−5=−5−5=−10.'},
+{id:'t2m2m19',category:'geometry',q:'Square inscribed in circle radius 10. Area of square?',choices:['100','100√2','200','400'],correct:2,explain:'Diagonal=20. Side=10√2. Area=200.'},
+{id:'t2m2m20',category:'adv-math',q:'<span class="math-expr">5<sup>x+1</sup>=125</span>. What is <span class="math-expr">5<sup>2x−1</sup></span>?',choices:['25','75','125','625'],correct:2,explain:'x=2. 5³=125.'}
+]}};
+
+const CATEGORIES={ela:{'reading-comp':{name:'Reading Comprehension',desc:'Understanding main ideas, inferences, and author purpose'},'vocab-context':{name:'Words in Context',desc:'Determining word meanings from context'},'evidence':{name:'Command of Evidence',desc:'Identifying supporting textual evidence'},'expression':{name:'Expression of Ideas',desc:'Organizing, developing, and refining written content'},'grammar':{name:'Standard English Conventions',desc:'Grammar, usage, punctuation, and sentence structure'}},math:{'algebra':{name:'Heart of Algebra',desc:'Linear equations, systems, inequalities, and linear functions'},'data-analysis':{name:'Problem Solving & Data Analysis',desc:'Ratios, proportions, percentages, and statistics'},'adv-math':{name:'Passport to Advanced Math',desc:'Quadratics, exponentials, polynomials, and function notation'},'geometry':{name:'Additional Topics in Math',desc:'Geometry, trigonometry, circles, and coordinate geometry'}}};
+const RECO={'reading-comp':'Practice active reading: identify main ideas, author purpose, and how evidence supports arguments. Read challenging nonfiction regularly.','vocab-context':'Read surrounding sentences for context clues. Practice inferring word meanings from complex academic passages.','evidence':'Verify answers are directly supported by the passage. Avoid choices requiring assumptions beyond the text.','expression':'Study transition words and logical relationships. Practice revising for clarity, concision, and logical flow.','grammar':'Review subject-verb agreement, parallel structure, comma/semicolon rules, modifier placement, and restrictive vs. nonrestrictive clauses.','algebra':'Practice translating complex word problems into algebra. Master systems of equations and multi-step problem solving.','data-analysis':'Review ratios, proportions, and statistics. Be careful with sequential operations and probability calculations.','adv-math':'Master function composition, exponential identities, quadratic discriminants, and polynomial factoring. Practice recognizing algebraic patterns.','geometry':'Review area/volume formulas, Pythagorean theorem, trig identities, and circle equations. Practice multi-step geometric reasoning.'};
+
+const State={view:'home',testId:null,section:null,qIdx:0,answers:null,marked:null,timerSec:0,timerInterval:null,timeLimit:1800,results:[],_viewResult:null,
+init(){try{this.results=JSON.parse(localStorage.getItem('sat_pro_data'))||[]}catch(e){this.results=[]}},save(){localStorage.setItem('sat_pro_data',JSON.stringify(this.results))}};
+
+const App={
+_els:null,_curPass:null,_modal:null,
+
+init(){State.init();this.bindGlobal();this.render()},
+
+bindGlobal(){
+  document.getElementById('logoBtn').addEventListener('click',()=>this.goHome());
+  document.getElementById('navLinks').addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;if(a.dataset.v==='home')this.goHome();else if(a.dataset.a==='showResults')this.showResults();else if(a.dataset.a==='showAnalysis')this.showAnalysis()});
+  document.getElementById('app').addEventListener('click',e=>{
+    if(State.view==='test'){
+      const ch=e.target.closest('.choice');if(ch){this.selectFast(+ch.dataset.choice);return}
+      const qp=e.target.closest('[data-goto]');if(qp){this.gotoQ(+qp.dataset.goto);return}
+    }
+    const rv=e.target.closest('[data-toggle-review]');if(rv){const el=document.getElementById('rq-'+rv.dataset.toggle);if(el)el.classList.toggle('open');return}
+    const el=e.target.closest('[data-action]');if(!el)return;
+    const a=el.dataset.action;
+    if(a==='start')this.startTest(el.dataset.test,el.dataset.section);
+    else if(a==='nextQ')this.nextQ();
+    else if(a==='prevQ')this.prevQ();
+    else if(a==='toggleMark')this.toggleMark();
+    else if(a==='confirmSubmit')this.confirmSubmit();
+    else if(a==='confirmExit')this.confirmExit();
+    else if(a==='goHome')this.goHome();
+    else if(a==='retake')this.startTest(el.dataset.test,el.dataset.section);
+    else if(a==='showAnalysis')this.showAnalysis();
+    else if(a==='showResults')this.showResults();
+    else if(a==='viewResult')this.viewResult(+el.dataset.resultIdx);
+    else if(a==='clearHistory')this.clearHistory();
+  });
+  document.addEventListener('keydown',e=>{
+    if(State.view!=='test')return;
+    const k=e.key.toLowerCase();
+    if('abcd'.includes(k)){e.preventDefault();this.selectFast(k.charCodeAt(0)-97)}
+    else if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();this.nextQ()}
+    else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();this.prevQ()}
+    else if(k==='m'){e.preventDefault();this.toggleMark()}
+  });
+},
+
+render(){
+  document.body.classList.toggle('test-active',State.view==='test');
+  document.getElementById('navLinks').innerHTML=[{l:'Home',v:'home'},{l:'Results',a:'showResults'},{l:'Analysis',a:'showAnalysis'}].map(x=>`<a class="${x.v&&State.view===x.v?'active':''}" data-a="${x.a||''}" data-v="${x.v||''}">${x.l}</a>`).join('');
+  const app=document.getElementById('app');
+  if(State.view==='home'){app.innerHTML=this.renderHome();window.scrollTo(0,0)}
+  else if(State.view==='test')this.initTest();
+  else if(State.view==='results'){app.innerHTML=this.renderResults();window.scrollTo(0,0)}
+  else if(State.view==='analysis'){app.innerHTML=this.renderAnalysis();window.scrollTo(0,0)}
+},
+
+secBase(s){return s.replace('2','')},
+secLabel(s){return{ela:'ELA — Reading & Writing',math:'Mathematics',ela2:'ELA — Module 2 Advanced',math2:'Math — Module 2 Advanced'}[s]||s},
+fmtTime(s){s=Math.max(0,s);return`${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`},
+
+/* ===== ADAPTIVE SAT SCORING ===== */
+calcSectionSAT(base){
+  const m1s=State.results.filter(r=>this.secBase(r.section)===base&&!r.section.endsWith('2'));
+  const m2s=State.results.filter(r=>this.secBase(r.section)===base&&r.section.endsWith('2'));
+  if(!m1s.length)return null;
+  const b1=m1s.reduce((a,r)=>r.correct/r.total>a.correct/a.total?r:a);
+  const m1Pct=b1.correct/b1.total;
+  if(!m2s.length)return{score:Math.round(200+m1Pct*400),track:null,m1Pct,m2Pct:null};
+  const b2=m2s.reduce((a,r)=>r.correct/r.total>a.correct/a.total?r:a);
+  const m2Pct=b2.correct/b2.total;
+  const cp=m1Pct*0.4+m2Pct*0.6;
+  const hard=m1Pct>=0.65;
+  return{score:hard?Math.round(400+cp*400):Math.round(200+cp*350),track:hard?'hard':'standard',m1Pct,m2Pct};
+},
+
+singleSAT(r){
+  const bs=this.secBase(r.section),isMod2=r.section.endsWith('2'),pct=r.correct/r.total;
+  if(!isMod2)return{score:Math.round(200+pct*400),track:null,note:'Complete Module 2 for full adaptive score'};
+  const m1=State.results.find(x=>x.testId===r.testId&&x.section===bs);
+  if(!m1)return{score:Math.round(200+pct*400),track:null,note:'No Module 1 data found'};
+  const m1Pct=m1.correct/m1.total,cp=m1Pct*0.4+pct*0.6,hard=m1Pct>=0.65;
+  return{score:hard?Math.round(400+cp*400):Math.round(200+cp*350),track:hard?'hard':'standard',note:hard?'Hard Track — Module 1 ≥ 65%':'Standard Track — Module 1 < 65%'};
+},
+
+estSAT(){
+  const ela=this.calcSectionSAT('ela'),math=this.calcSectionSAT('math');
+  if(!ela&&!math)return'—';
+  const es=ela?ela.score:null,ms=math?math.score:null;
+  if(es&&ms)return''+Math.min(1600,es+ms);
+  if(es)return'~'+Math.min(800,es+200);
+  if(ms)return'~'+Math.min(800,ms+200);
+  return'—';
+},
+
+/* HOME */
+renderHome(){
+  const hr=State.results.length>0;let perf='';
+  if(hr){
+    const tq=State.results.reduce((s,r)=>s+r.total,0),tc=State.results.reduce((s,r)=>s+r.correct,0);
+    const ela=this.calcSectionSAT('ela'),math=this.calcSectionSAT('math');
+    const totalSAT=this.estSAT();
+
+    let breakdownRows='';
+    if(ela){
+      const trk=ela.track==='hard'?'<span class="sr-track track-hard">Hard Track</span>':ela.track==='standard'?'<span class="sr-track track-standard">Standard Track</span>':'<span class="sr-track track-pending">Module 1 Only</span>';
+      breakdownRows+=`<div class="score-row"><span class="sr-label">ELA Section</span><span>${trk}<span class="sr-val" style="margin-left:0.75rem">${ela.score}</span></span></div>`;
+    }
+    if(math){
+      const trk=math.track==='hard'?'<span class="sr-track track-hard">Hard Track</span>':math.track==='standard'?'<span class="sr-track track-standard">Standard Track</span>':'<span class="sr-track track-pending">Module 1 Only</span>';
+      breakdownRows+=`<div class="score-row"><span class="sr-label">Math Section</span><span>${trk}<span class="sr-val" style="margin-left:0.75rem">${math.score}</span></span></div>`;
+    }
+    if(ela&&math)breakdownRows+=`<div class="score-row total-row"><span class="sr-label">Total SAT</span><span class="sr-val">${totalSAT}</span></div>`;
+
+    const adaptiveNote=`<div class="adaptive-note"><strong>Adaptive Scoring:</strong> The Digital SAT routes students to a harder or easier Module 2 based on Module 1 performance. Scoring 65%+ on Module 1 places you on the <strong>Hard Track</strong> (section range: 400–800). Below 65% routes to the <strong>Standard Track</strong> (section range: 200–550). Module 2 is weighted more heavily (60%) in the final score.</div>`;
+
+    perf=`<div class="results-section"><h3>Your Performance</h3><div class="perf-grid"><div class="perf-card"><div class="perf-val">${State.results.length}</div><div class="perf-label">Sections Completed</div></div><div class="perf-card"><div class="perf-val">${tc}/${tq}</div><div class="perf-label">Total Correct</div></div><div class="perf-card"><div class="perf-val">${Math.round(tc/tq*100)}%</div><div class="perf-label">Average Accuracy</div></div><div class="perf-card"><div class="perf-val">${totalSAT}</div><div class="perf-label">Est. Total SAT</div></div></div>${breakdownRows?`<div class="score-breakdown"><h4>Adaptive Score Breakdown</h4>${breakdownRows}</div>`:''}${adaptiveNote}<div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:1.5rem"><button class="ra-btn gold" data-action="showAnalysis">View Detailed Analysis</button><button class="ra-btn secondary" data-action="showResults">Review Past Tests</button><button class="ra-btn secondary" data-action="clearHistory">Clear History</button></div></div>`;
+  }
+
+  const badge=(tid,sec)=>{const r=State.results.find(r=>r.testId===tid&&r.section===sec);return r?`<span class="sb-badge">${r.correct}/${r.total}</span>`:'→'};
+  const cls=(tid,sec,h)=>`section-btn${State.results.find(r=>r.testId===tid&&r.section===sec)?' completed':''}${h?' hard':''}`;
+
+  const cards=[{id:'test1',name:'Practice Test 1',desc:'Foundation to advanced practice across all SAT domains',diff:'Standard to Advanced'},{id:'test2',name:'Practice Test 2',desc:'Intermediate to advanced practice with more complex problem types',diff:'Intermediate to Advanced'}].map(t=>`<div class="test-card"><div class="test-card-header"><div class="test-label">${t.diff}</div><h3>${t.name}</h3><p>${t.desc}</p></div><div class="test-card-body"><div class="module-divider"><span>Module 1 — Standard</span></div><div class="${cls(t.id,'ela',false)}" data-action="start" data-test="${t.id}" data-section="ela"><div class="sb-info"><span class="sb-name">ELA — Reading &amp; Writing</span><span class="sb-meta">20 questions · 30 min</span></div><span class="sb-arrow">${badge(t.id,'ela')}</span></div><div class="${cls(t.id,'math',false)}" data-action="start" data-test="${t.id}" data-section="math"><div class="sb-info"><span class="sb-name">Mathematics</span><span class="sb-meta">20 questions · 30 min</span></div><span class="sb-arrow">${badge(t.id,'math')}</span></div><div class="module-divider advanced"><span>Module 2 — Adaptive</span></div><div class="${cls(t.id,'ela2',true)}" data-action="start" data-test="${t.id}" data-section="ela2"><div class="sb-info"><span class="sb-name">ELA — Advanced</span><span class="sb-meta">20 questions · 35 min · Requires 65%+ on M1</span></div><span class="sb-arrow">${badge(t.id,'ela2')}</span></div><div class="${cls(t.id,'math2',true)}" data-action="start" data-test="${t.id}" data-section="math2"><div class="sb-info"><span class="sb-name">Math — Advanced</span><span class="sb-meta">20 questions · 35 min · Requires 65%+ on M1</span></div><span class="sb-arrow">${badge(t.id,'math2')}</span></div></div></div>`).join('');
+
+  return`<div class="hero"><div class="hero-inner"><h1>Diagnose your weaknesses.<br><em>Master the SAT.</em></h1><div class="hero-accent"></div><p>Take practice tests with adaptive scoring. Module 1 performance determines your track — score 65%+ to unlock the Hard Track and access higher scores.</p></div></div><div class="home-content">${perf}<div class="results-section"><h3>Practice Tests</h3><p class="section-subtitle">Complete Module 1 first. Module 2 adapts to your Module 1 performance, just like the real Digital SAT.</p><div class="test-grid">${cards}</div></div></div>`;
+},
+
+/* TEST */
+initTest(){
+  const app=document.getElementById('app'),qs=QUESTIONS[State.testId][State.section],sec=this.secLabel(State.section),tName=State.testId==='test1'?'Practice Test 1':'Practice Test 2';
+  app.innerHTML=`<div class="test-header"><div class="test-header-left"><span class="th-section">${sec}</span><span class="th-title">${tName}</span></div><div class="test-header-right"><div class="timer" id="timer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span id="timerD">${this.fmtTime(State.timeLimit)}</span></div><button class="exit-btn" data-action="confirmExit">Exit Test</button></div></div><div class="progress-bar-track"><div class="progress-bar-fill" id="progF"></div></div><div class="test-layout"><div class="test-main"><div id="passEl"></div><div class="q-meta"><span class="q-num" id="qN"></span><span class="q-cat" id="qC"></span></div><div class="q-text" id="qT"></div><div class="choices" id="chE"></div><div class="q-actions" id="qA"></div><div class="q-nav" id="qNav"></div></div><div class="test-sidebar"><div class="sidebar-section"><div class="qp-label">Question Map</div><div class="qp-grid" id="palE">${qs.map((_,i)=>`<div class="qp-btn" data-goto="${i}">${i+1}</div>`).join('')}</div></div><div class="sidebar-section"><div class="qp-label">Legend</div><div class="sidebar-legend"><div class="legend-item"><div class="legend-dot current"></div> Current</div><div class="legend-item"><div class="legend-dot answered"></div> Answered</div><div class="legend-item"><div class="legend-dot marked"></div> Marked</div></div></div></div></div>`;
+  this._els={pass:document.getElementById('passEl'),qN:document.getElementById('qN'),qC:document.getElementById('qC'),qT:document.getElementById('qT'),ch:document.getElementById('chE'),act:document.getElementById('qA'),nav:document.getElementById('qNav'),pal:document.getElementById('palE'),prog:document.getElementById('progF'),tmr:document.getElementById('timer'),tmrD:document.getElementById('timerD')};
+  this._curPass=null;this.updateQ();this.startTimer();window.scrollTo(0,0);
+},
+
+updateQ(){
+  const qs=QUESTIONS[State.testId][State.section],q=qs[State.qIdx],tot=qs.length,bs=this.secBase(State.section),cat=CATEGORIES[bs][q.category],el=this._els;
+  if(q.passage!==this._curPass){this._curPass=q.passage;if(q.passage&&PASSAGES[q.passage]){const p=PASSAGES[q.passage];el.pass.innerHTML=`<div class="passage-panel"><div class="passage-title">${p.title}</div><div class="passage-text">${p.text}</div></div>`;el.pass.style.display=''}else{el.pass.innerHTML='';el.pass.style.display='none'}}
+  el.qN.textContent=(State.qIdx+1)+' of '+tot;el.qC.textContent=cat.name;el.qT.innerHTML=q.q;
+  const sel=State.answers[q.id];el.ch.innerHTML=q.choices.map((c,i)=>`<div class="choice${sel===i?' selected':''}" data-choice="${i}"><span class="choice-letter">${String.fromCharCode(65+i)}</span><span class="choice-text">${c}</span></div>`).join('');
+  const mk=State.marked.has(q.id),an=Object.keys(State.answers).filter(k=>qs.some(x=>x.id===k)).length;
+  el.act.innerHTML=`<button class="mark-btn${mk?' marked':''}" data-action="toggleMark">${mk?'★ Marked':'☆ Mark for Review'}</button><span style="font-size:0.78rem;color:var(--text-muted)">${an} of ${tot} answered</span>`;
+  const last=State.qIdx===tot-1;
+  el.nav.innerHTML=`<button class="nav-btn prev" data-action="prevQ"${State.qIdx===0?' disabled':''}>← Previous</button>${last?`<button class="nav-btn submit" data-action="confirmSubmit">Submit Section</button>`:`<button class="nav-btn next" data-action="nextQ">Next →</button>`}`;
+  el.prog.style.width=((State.qIdx+1)/tot*100)+'%';
+  const btns=el.pal.children,ml=State.marked;
+  for(let i=0;i<btns.length;i++){let c='qp-btn';if(i===State.qIdx)c+=' current';else if(State.answers[qs[i].id]!==undefined)c+=' answered';if(ml.has(qs[i].id))c+=' marked';btns[i].className=c}
+},
+
+selectFast(ci){
+  if(State.view!=='test'||!this._els)return;
+  const q=QUESTIONS[State.testId][State.section][State.qIdx];if(State.answers[q.id]===ci)return;
+  State.answers[q.id]=ci;const ch=this._els.ch.children;for(let i=0;i<ch.length;i++)ch[i].classList.toggle('selected',i===ci);
+  const qs=QUESTIONS[State.testId][State.section],btns=this._els.pal.children,ml=State.marked;
+  for(let i=0;i<btns.length;i++){let c='qp-btn';if(i===State.qIdx)c+=' current';else if(State.answers[qs[i].id]!==undefined)c+=' answered';if(ml.has(qs[i].id))c+=' marked';btns[i].className=c}
+},
+
+nextQ(){const qs=QUESTIONS[State.testId][State.section];if(State.qIdx<qs.length-1){State.qIdx++;this.updateQ();window.scrollTo(0,0)}},
+prevQ(){if(State.qIdx>0){State.qIdx--;this.updateQ();window.scrollTo(0,0)}},
+gotoQ(i){State.qIdx=i;this.updateQ()},
+toggleMark(){if(State.view!=='test')return;const q=QUESTIONS[State.testId][State.section][State.qIdx];if(State.marked.has(q.id))State.marked.delete(q.id);else State.marked.add(q.id);this.updateQ()},
+
+startTimer(){this.stopTimer();State.timerInterval=setInterval(()=>{State.timerSec++;if(this._els&&this._els.tmrD){const l=State.timeLimit-State.timerSec;this._els.tmrD.textContent=this.fmtTime(l);this._els.tmr.className='timer'+(l<60?' danger':l<300?' warning':'');if(l<=0){this.stopTimer();this.submitTest()}}},1000)},
+stopTimer(){if(State.timerInterval){clearInterval(State.timerInterval);State.timerInterval=null}},
+
+startTest(tid,sec){
+  this.stopTimer();this._els=null;this._curPass=null;
+  State.view='test';State.testId=tid;State.section=sec;State.qIdx=0;State.answers={};State.marked=new Set();State.timerSec=0;
+  State.timeLimit=sec.includes('2')?2100:1800;this.render();
+},
+
+confirmSubmit(){const qs=QUESTIONS[State.testId][State.section],an=Object.keys(State.answers).filter(k=>qs.some(q=>q.id===k)).length,un=qs.length-an;this.showModal('Submit Section?',un>0?`You have answered ${an} of ${qs.length} questions. ${un} unanswered.`:`You've answered all ${qs.length} questions.`,[{l:'Cancel',cls:'secondary',a:'close'},{l:'Submit',cls:'primary',a:'submit'}])},
+
+submitTest(){
+  this.stopTimer();const qs=QUESTIONS[State.testId][State.section],bs=this.secBase(State.section);let correct=0;
+  const cs={};Object.keys(CATEGORIES[bs]).forEach(k=>cs[k]={correct:0,total:0});
+  qs.forEach(q=>{const is=State.answers[q.id]===q.correct;if(is)correct++;if(cs[q.category]){cs[q.category].total++;if(is)cs[q.category].correct++}});
+  const r={testId:State.testId,section:State.section,timestamp:Date.now(),answers:{...State.answers},correct,total:qs.length,categoryScores:cs,timeTaken:State.timerSec};
+  State.results.push(r);State.save();State._viewResult=r;this._els=null;this._curPass=null;State.view='results';this.render();
+},
+
+confirmExit(){this.showModal('Exit Test?','Your progress will be lost.',[{l:'Continue Test',cls:'primary',a:'close'},{l:'Exit',cls:'secondary',a:'home'}])},
+goHome(){this.stopTimer();this._els=null;this._curPass=null;State.view='home';State._viewResult=null;this.render()},
+viewResult(i){State._viewResult=State.results[i];State.view='results';this.render()},
+showAnalysis(){State.view='analysis';State._viewResult=null;this.render()},
+showResults(){if(!State.results.length){this.showModal('No Results Yet','Complete a test first.',[{l:'OK',cls:'primary',a:'close'}]);return}this.showAnalysis()},
+clearHistory(){this.showModal('Clear All History?','This permanently deletes all test results.',[{l:'Cancel',cls:'secondary',a:'close'},{l:'Clear All',cls:'primary',a:'clear'}])},
+
+/* RESULTS */
+renderResults(){
+  if(!State._viewResult)return this.renderHome();
+  const r=State._viewResult,bs=this.secBase(r.section),tN=r.testId==='test1'?'Practice Test 1':'Practice Test 2',sN=this.secLabel(r.section),pct=Math.round(r.correct/r.total*100),m=Math.floor(r.timeTaken/60),s=r.timeTaken%60,cats=CATEGORIES[bs];
+
+  const satInfo=this.singleSAT(r);
+  const trackBadge=satInfo.track==='hard'?'<div class="rh-track"><span class="sr-track track-hard" style="font-size:0.82rem;padding:0.3rem 1rem">Hard Track</span></div>':satInfo.track==='standard'?'<div class="rh-track"><span class="sr-track track-standard" style="font-size:0.82rem;padding:0.3rem 1rem">Standard Track</span></div>':'';
+
+  const cBars=Object.keys(cats).map(k=>{const c=r.categoryScores[k]||{correct:0,total:0},p=c.total>0?Math.round(c.correct/c.total*100):0,lvl=p>=75?'strong':p>=50?'developing':'weak';return`<div class="cat-bar"><div class="cat-bar-top"><span class="cat-bar-name">${cats[k].name}</span><span class="cat-bar-score">${c.correct}/${c.total} (${p}%)</span></div><div class="cat-bar-track"><div class="cat-bar-fill ${lvl}" style="width:${p}%"></div></div></div>`}).join('');
+  const wk=Object.keys(cats).filter(k=>{const c=r.categoryScores[k]||{correct:0,total:0};return c.total>0&&c.correct/c.total<.75}).sort((a,b)=>{const sa=r.categoryScores[a]||{correct:0,total:1};const sb=r.categoryScores[b]||{correct:0,total:1};return sa.correct/sa.total-sb.correct/sb.total});
+  const wHTML=wk.length?wk.map(k=>{const c=r.categoryScores[k]||{correct:0,total:0},p=c.total>0?Math.round(c.correct/c.total*100):0;return`<div class="weak-card${p>=50?' developing-card':''}"><h4>${cats[k].name}</h4><div class="wc-score">${p}% correct (${c.correct}/${c.total})</div><p>${cats[k].desc}</p><div class="wc-tip"><strong>Study Tip:</strong> ${RECO[k]}</div></div>`}).join(''):'<p style="color:var(--green);font-weight:500">Great work! 75%+ in all categories.</p>';
+  const qs=QUESTIONS[r.testId][r.section];
+  const revHTML=qs.map((q,i)=>{const ua=r.answers[q.id],isC=ua===q.correct,nc=isC?'correct-rq':'incorrect-rq',cn=cats[q.category]?.name||'';
+  const chH=q.choices.map((c,ci)=>{let cls='';if(ci===q.correct&&ci===ua)cls='was-correct';else if(ci===ua&&ci!==q.correct)cls='was-incorrect';else if(ci===q.correct)cls='correct-answer';return`<div class="rq-choice ${cls}"><strong>${String.fromCharCode(65+ci)}.</strong> ${c}${ci===ua?(isC?' ✓':' ✗'):ci===q.correct?' ✓':''}</div>`}).join('');
+  return`<div class="review-q" id="rq-${i}"><div class="review-q-header" data-toggle-review="${i}"><div class="rq-left"><span class="rq-num ${nc}">${i+1}</span><span class="rq-text">${q.q.replace(/<[^>]*>/g,'').substring(0,80)}${q.q.replace(/<[^>]*>/g,'').length>80?'...':''}</span></div><span class="rq-cat">${cn}</span><span class="rq-chevron">▼</span></div><div class="review-q-body"><div class="rq-choices">${chH}</div><div class="rq-explanation">${q.explain}</div></div></div>`}).join('');
+
+  const adaptiveInfo=satInfo.track?`<div class="adaptive-note" style="margin-top:0"><strong>${satInfo.note}.</strong> Module 2 is weighted 60% in the final section score. ${satInfo.track==='hard'?'Hard Track gives access to scores in the 400–800 range.':'Standard Track caps your section score around 550. To unlock higher scores, aim for 65%+ on Module 1.'}</div>`:`<div class="adaptive-note" style="margin-top:0"><strong>${satInfo.note}</strong> Complete Module 2 to see your adaptive section score and track assignment.</div>`;
+
+  return`<div class="results-hero"><div class="rh-score">${satInfo.score}</div><div class="rh-label">Estimated SAT Section Score</div><div class="rh-section">${tN} — ${sN}</div>${trackBadge}<div class="rh-stats"><div class="rh-stat"><div class="rs-val">${r.correct}/${r.total}</div><div class="rs-label">Correct (${pct}%)</div></div><div class="rh-stat"><div class="rs-val">${m}:${s.toString().padStart(2,'0')}</div><div class="rs-label">Time Taken</div></div></div></div><div class="results-body">${adaptiveInfo}<div class="results-section" style="margin-top:2rem"><h3>Category Breakdown</h3>${cBars}</div><div class="results-section"><h3>Areas to Improve</h3>${wHTML}</div><div class="results-section"><h3>Question Review</h3><p class="section-subtitle">Click any question to see the explanation.</p>${revHTML}</div><div class="results-actions"><button class="ra-btn primary" data-action="retake" data-test="${r.testId}" data-section="${r.section}">Retake This Section</button><button class="ra-btn gold" data-action="showAnalysis">View Full Analysis</button><button class="ra-btn secondary" data-action="goHome">Back to Home</button></div></div>`;
+},
+
+/* ANALYSIS */
+renderAnalysis(){
+  if(!State.results.length)return`<div class="home-content"><div class="empty-state"><h3>No Data Yet</h3><p>Complete a practice test to see your analysis.</p><button class="ra-btn primary" data-action="goHome">Take a Test</button></div></div>`;
+  const ac={};State.results.forEach(r=>{const bs=this.secBase(r.section);Object.keys(r.categoryScores).forEach(k=>{const c=r.categoryScores[k];if(!ac[k])ac[k]={correct:0,total:0,sec:bs};ac[k].correct+=c.correct;ac[k].total+=c.total})});
+  const sorted=Object.keys(ac).sort((a,b)=>ac[a].correct/ac[a].total-ac[b].correct/ac[b].total);
+  const cBars=sorted.map(k=>{const a=ac[k],p=Math.round(a.correct/a.total*100),lvl=p>=75?'strong':p>=50?'developing':'weak',nm=CATEGORIES[a.sec]?.[k]?.name||k;return`<div class="cat-bar"><div class="cat-bar-top"><span class="cat-bar-name">${nm} <span style="font-size:0.72rem;color:var(--text-muted);text-transform:uppercase;font-family:var(--font-mono)">${a.sec}</span></span><span class="cat-bar-score">${a.correct}/${a.total} (${p}%)</span></div><div class="cat-bar-track"><div class="cat-bar-fill ${lvl}" style="width:${p}%"></div></div></div>`}).join('');
+  const w3=sorted.filter(k=>ac[k].correct/ac[k].total<.75).slice(0,3);
+  const wHTML=w3.length?w3.map(k=>{const a=ac[k],p=Math.round(a.correct/a.total*100),nm=CATEGORIES[a.sec]?.[k]?.name||k;return`<div class="weak-card${p>=50?' developing-card':''}"><h4>${nm}</h4><div class="wc-score">${p}% overall (${a.correct}/${a.total} across all tests)</div><p>${CATEGORIES[a.sec]?.[k]?.desc||''}</p><div class="wc-tip"><strong>Study Plan:</strong> ${RECO[k]}</div></div>`}).join(''):'<p style="color:var(--green);font-weight:500">Excellent! 75%+ across all categories.</p>';
+
+  const ela=this.calcSectionSAT('ela'),math=this.calcSectionSAT('math');
+  let satBreakdown='';
+  if(ela||math){
+    let rows='';
+    if(ela){const trk=ela.track==='hard'?'<span class="sr-track track-hard">Hard</span>':ela.track==='standard'?'<span class="sr-track track-standard">Standard</span>':'<span class="sr-track track-pending">M1 Only</span>';rows+=`<div class="score-row"><span class="sr-label">ELA</span><span>${trk}<span class="sr-val" style="margin-left:0.75rem">${ela.score}</span></span></div>`}
+    if(math){const trk=math.track==='hard'?'<span class="sr-track track-hard">Hard</span>':math.track==='standard'?'<span class="sr-track track-standard">Standard</span>':'<span class="sr-track track-pending">M1 Only</span>';rows+=`<div class="score-row"><span class="sr-label">Math</span><span>${trk}<span class="sr-val" style="margin-left:0.75rem">${math.score}</span></span></div>`}
+    if(ela&&math)rows+=`<div class="score-row total-row"><span class="sr-label">Total</span><span class="sr-val">${ela.score+math.score}</span></div>`;
+    satBreakdown=`<div class="score-breakdown"><h4>Adaptive SAT Score Estimate</h4>${rows}</div>`;
+  }
+
+  const resList=State.results.map((r,i)=>{const p=Math.round(r.correct/r.total*100);return`<div class="section-btn" data-action="viewResult" data-result-idx="${i}" style="margin-bottom:0.5rem"><div class="sb-info"><span class="sb-name">${r.testId==='test1'?'Test 1':'Test 2'} — ${this.secLabel(r.section)}</span><span class="sb-meta">${new Date(r.timestamp).toLocaleDateString()} · ${r.correct}/${r.total} (${p}%)</span></div><span class="sb-arrow">→</span></div>`}).join('');
+  const tq=State.results.reduce((s,r)=>s+r.total,0),tc=State.results.reduce((s,r)=>s+r.correct,0);
+  return`<div class="hero" style="padding:3rem 2rem"><div class="hero-inner"><h1 style="font-size:clamp(1.8rem,4vw,3rem)">Your <em>Study Plan</em></h1><div class="hero-accent"></div><p>Based on ${State.results.length} completed section${State.results.length>1?'s':''} — ${tc}/${tq} correct (${Math.round(tc/tq*100)}% overall)</p></div></div><div class="home-content">${satBreakdown}<div class="results-section"><h3>Aggregate Performance by Category</h3><p class="section-subtitle">Combined results from all completed tests</p>${cBars}</div><div class="results-section"><h3>Priority Study Areas</h3><p class="section-subtitle">Focus on these categories for the biggest score improvements</p>${wHTML}</div><div class="results-section"><h3>All Completed Sections</h3>${resList}</div><div class="results-actions"><button class="ra-btn primary" data-action="goHome">Take Another Test</button><button class="ra-btn secondary" data-action="clearHistory">Clear History</button></div></div>`;
+},
+
+/* MODAL */
+showModal(t,m,btns){this.closeModal();const ov=document.createElement('div');ov.className='modal-overlay';ov.innerHTML=`<div class="modal"><h3>${t}</h3><p>${m}</p><div class="modal-btns">${btns.map(b=>`<button class="nav-btn ${b.cls}" data-ma="${b.a}">${b.l}</button>`).join('')}</div></div>`;document.body.appendChild(ov);this._modal=ov;ov.addEventListener('click',e=>{const btn=e.target.closest('[data-ma]');if(btn){const a=btn.dataset.ma;if(a==='close')this.closeModal();else if(a==='submit'){this.closeModal();this.submitTest()}else if(a==='home'){this.closeModal();this.goHome()}else if(a==='clear'){State.results=[];State.save();this.closeModal();this.goHome()}}if(e.target===ov)this.closeModal()})},
+closeModal(){if(this._modal){this._modal.remove();this._modal=null}}
+};
+
+App.init();
+</script>
+</body>
+</html>
